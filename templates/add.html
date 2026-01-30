@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Produto</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add.css') }}">
+</head>
+<body>
+
+<div class="container admin-container">
+    <h1>Novo Produto</h1>
+
+    <form action="/admin/add" method="POST" enctype="multipart/form-data">
+
+        <div class="campo">
+            <label>Nome do produto</label>
+            <input type="text" name="nome" required>
+        </div>
+
+        <div class="campo">
+            <label>Categoria</label>
+            <select name="categoria" required>
+                <option value="">Selecione uma categoria</option>
+                <option value="Boné">Boné</option>
+                <option value="Chapéu">Chapéu</option>
+                <option value="Viseira">Viseira</option>
+            </select>
+        </div>
+
+        <h3>Cores do Produto</h3>
+
+        <div id="cores-container"></div>
+
+        <button type="button" class="btn-add-cor" onclick="adicionarCor()">
+            + Adicionar cor
+        </button>
+
+        <button type="submit" class="btn-salvar">
+            Salvar Produto
+        </button>
+
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/add.js') }}"></script>
+</body>
+</html>

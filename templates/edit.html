@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Produto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
+</head>
+<body>
+
+<header>EDITAR PRODUTO</header>
+
+<div class="form-box">
+    <h2>{{ item.nome }}</h2>
+
+    <form id="form-editar-produto" enctype="multipart/form-data">
+        <input type="hidden" id="produto-id" value="{{ item.id }}">
+
+        <input type="text" id="nome" value="{{ item.nome }}" required>
+
+        <div class="campo">
+            <label>Categoria</label>
+            <select id="categoria" required>
+                <option value="Boné" {% if item.categoria == "Boné" %}selected{% endif %}>Boné</option>
+                <option value="Chapéu" {% if item.categoria == "Chapéu" %}selected{% endif %}>Chapéu</option>
+                <option value="Viseira" {% if item.categoria == "Viseira" %}selected{% endif %}>Viseira</option>
+            </select>
+        </div>
+
+        <hr style="margin: 25px 0; opacity: .2">
+
+        <h3 style="margin-bottom: 12px;">Cores do Produto</h3>
+
+        <div id="cores-container">
+            {% for cor in item.cores %}
+            <div class="cor-item" data-id="{{ cor.id }}">
+                <input type="text" class="input-cor" value="{{ cor.cor }}" placeholder="Nome da cor">
+
+                <img src="/static/uploads/{{ cor.imagem }}" class="preview">
+
+                <input type="file" class="input-imagem">
+
+                <button type="button" class="btn-remover">Remover</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" id="add-cor">+ Adicionar cor</button>
+
+        <hr style="margin: 30px 0; opacity: .2">
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/edit.js') }}"></script>
+</body>
+</html>

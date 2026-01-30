@@ -1,0 +1,347 @@
+/* =========================
+   RESET & BASE
+========================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* Cores base */
+    --blue-dark: #0A1324;
+    --blue-main: #1E6FD9;
+    --blue-support: #0F1F3A;
+    --blue-ui: #2F80ED;
+    --blue-light: #6FB1FF;
+
+    /* Neutros */
+    --white: #FFFFFF;
+    --graphite: #1C1F26;
+    --gray-dark: #2E3440;
+    --gray: #BFC6CE;
+    --gray-light: #E5E9F0;
+
+    /* Destaque */
+    --yellow: #F2C94C;
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+}
+
+body {
+    background: linear-gradient(180deg, #0A1324, #0F1F3A);
+    color: var(--white);
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    line-height: 1.5;
+}
+
+/* =========================
+   HEADER
+========================= */
+header {
+    background: linear-gradient(90deg, #1E6FD9, #2F80ED);
+    padding: 20px;
+    text-align: center;
+    font-family: 'Proxima Nova', 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+.container {
+    max-width: 1100px;
+    margin: 48px auto;
+    padding: 0 20px;
+}
+
+/* =========================
+   BOTÕES TOPO
+========================= */
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.top-actions a {
+    background: var(--graphite);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+}
+
+.top-actions a:hover {
+    background: var(--blue-main);
+    border-color: var(--blue-light);
+}
+
+/* =========================
+   TABELA
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--graphite);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+th, td {
+    padding: 16px;
+    text-align: center;
+}
+
+th {
+    background: var(--blue-support);
+    color: var(--blue-light);
+    font-family: 'Proxima Nova', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+tr:nth-child(even) {
+    background: #161A22;
+}
+
+/* =========================
+   TIPOS DE TEXTO
+========================= */
+td.nome {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+td.preco {
+    font-family: 'Proxima Nova', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--yellow);
+}
+
+td.descricao {
+    font-size: 14px;
+    color: var(--gray);
+    font-weight: 400;
+}
+
+/* =========================
+   IMAGEM
+========================= */
+img.thumb {
+    width: 180px;
+    border-radius: var(--radius-md);
+    border: 1px solid #2E3440;
+}
+
+/* =========================
+   BOTÕES AÇÃO
+========================= */
+.btn {
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.btn-edit {
+    background: var(--blue-ui);
+    color: var(--white);
+}
+
+.btn-del {
+    background: #E55353;
+    color: var(--white);
+}
+
+.btn-edit:hover {
+    background: var(--blue-main);
+}
+
+.btn-del:hover {
+    background: #CC3B3B;
+}
+
+/* =========================
+   FORMULÁRIOS
+========================= */
+.form-box {
+    max-width: 520px;
+    background: var(--graphite);
+    margin: 70px auto;
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    border: 1px solid #2E3440;
+}
+
+.form-box h2 {
+    margin-bottom: 24px;
+    color: var(--blue-light);
+    font-family: 'Proxima Nova', sans-serif;
+    font-size: 28px;
+    text-align: center;
+}
+
+.form-box input,
+.form-box textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    background: #0F131A;
+    border: 1px solid #2E3440;
+    border-radius: var(--radius-sm);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+}
+
+.form-box input:focus,
+.form-box textarea:focus {
+    outline: none;
+    border-color: var(--blue-ui);
+}
+
+.form-box button {
+    width: 100%;
+    background: linear-gradient(90deg, #1E6FD9, #2F80ED);
+    border: none;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.form-box button:hover {
+    filter: brightness(1.1);
+}
+
+/* =========================
+   PREVIEW IMAGEM
+========================= */
+.preview-box {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #2E3440;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--radius-md);
+    color: var(--gray);
+}
+
+.preview-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* =========================
+   ADMIN LISTAGEM RESPONSIVO COMPLETO
+========================= */
+
+/* DESKTOP ULTRAWIDE */
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1400px;
+        padding: 0 40px;
+    }
+
+    table th, table td {
+        padding: 20px;
+        font-size: 18px;
+    }
+
+    img.thumb {
+        width: 200px;
+    }
+}
+
+/* DESKTOP / NOTEBOOK */
+@media (max-width: 1280px) {
+    .container {
+        max-width: 1100px;
+        padding: 0 32px;
+    }
+
+    table th, table td {
+        padding: 16px;
+        font-size: 16px;
+    }
+
+    img.thumb {
+        width: 160px;
+    }
+}
+
+/* TABLET */
+@media (max-width: 1024px) {
+    table th, table td {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    img.thumb {
+        width: 140px;
+    }
+
+    .top-actions {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+/* MOBILE GRANDE */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+
+    img.thumb {
+        width: 120px;
+    }
+
+    .top-actions {
+        flex-direction: column;
+    }
+}
+
+/* MOBILE PADRÃO */
+@media (max-width: 520px) {
+    table th:nth-child(3),
+    table td:nth-child(3) {
+        display: none;
+    }
+
+    img.thumb {
+        width: 100px;
+    }
+}
+
+/* MOBILE MUITO PEQUENO */
+@media (max-width: 360px) {
+    table th, table td {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    img.thumb {
+        width: 80px;
+    }
+}

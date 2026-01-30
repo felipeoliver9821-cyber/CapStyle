@@ -1,0 +1,275 @@
+const produtos = JSON.parse(document.getElementById("produtos-data")?.textContent || "{}");
+
+let categoriaAtual = Object.keys(produtos)[0] || null;
+let itensPedido = [];
+
+const quantidadesTemp = {};
+const coresSelecionadas = {};
+const imagemIndex = {};
+
+// ================= FILTRO DE CATEGORIAS =================
+window.filtrarCategoria = function (cat) {
+    categoriaAtual = cat;
+    document.querySelectorAll(".btn-cat").forEach(btn =>
+        btn.classList.toggle("ativa", btn.dataset.cat === cat)
+    );
+    renderizarProdutosPedido();
+};
+
+// ================= QUANTIDADES TEMPORÁRIAS =================
+function alterarQtdTemp(nome, delta) {
+    quantidadesTemp[nome] = (quantidadesTemp[nome] || 0) + delta;
+    if (quantidadesTemp[nome] < 0) quantidadesTemp[nome] = 0;
+    renderizarProdutosPedido();
+}
+
+// ================= ADICIONAR ITEM AO ORÇAMENTO =================
+function adicionarItem(produto) {
+    const qtd = quantidadesTemp[produto.nome] || 0;
+    const cor = coresSelecionadas[produto.nome];
+
+    if (qtd < 10) {
+        alert("Quantidade mínima: 10 unidades");
+        return;
+    }
+    if (!cor) {
+        alert("Selecione uma cor");
+        return;
+    }
+
+    const existente = itensPedido.find(i => i.produto === produto.nome && i.cor === cor);
+
+    if (existente) {
+        existente.quantidade += qtd;
+    } else {
+        itensPedido.push({
+            produto: produto.nome,
+            categoria: produto.categoria,
+            cor,
+            quantidade: qtd
+        });
+    }
+
+    quantidadesTemp[produto.nome] = 0;
+    atualizarResumoPedido();
+    renderizarProdutosPedido();
+}
+
+// ================= ATUALIZA RESUMO DE ITENS =================
+function atualizarResumoPedido() {
+    const lista = document.getElementById("resumo-itens");
+    if (!lista) return;
+
+    // Mantém o container de preview da imagem separado
+    const previewContainer = lista.querySelector(".orcamento-gerado");
+    lista.innerHTML = "";
+    if (previewContainer) lista.appendChild(previewContainer);
+
+    if (itensPedido.length === 0) {
+        if (!previewContainer) {
+            lista.innerHTML += `<li class="preview-vazio">Nenhum item adicionado</li>`;
+        }
+        return;
+    }
+
+    itensPedido.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.className = "orcamento-item";
+        li.innerHTML = `
+            <div class="orcamento-info">
+                <strong>${item.produto}</strong>
+                <span>Cor: ${item.cor}</span>
+                <span>Quantidade: ${item.quantidade}</span>
+            </div>
+            <button class="btn-remover" onclick="removerItem(${i})">✕</button>
+        `;
+        lista.appendChild(li);
+    });
+}
+
+// ================= REMOVER ITEM =================
+function removerItem(index) {
+    itensPedido.splice(index, 1);
+    atualizarResumoPedido();
+}
+
+// ================= RENDERIZA PRODUTOS =================
+function renderizarProdutosPedido() {
+    const lista = document.getElementById("lista-produtos");
+    if (!lista || !produtos[categoriaAtual]) return;
+
+    lista.innerHTML = "";
+
+    produtos[categoriaAtual].forEach(produto => {
+        if (!produto.cores?.length) return;
+
+        const qtd = quantidadesTemp[produto.nome] || 0;
+        imagemIndex[produto.nome] ??= 0;
+        coresSelecionadas[produto.nome] ??= produto.cores[0].cor;
+
+        const li = document.createElement("li");
+
+        const imagensWrap = document.createElement("div");
+        imagensWrap.className = "produto-imagens";
+
+        produto.cores.forEach((c, i) => {
+            const img = document.createElement("img");
+            img.src = `/static/uploads/${c.imagem}`;
+            img.className = i === imagemIndex[produto.nome] ? "ativa" : "";
+            imagensWrap.appendChild(img);
+        });
+
+        const criarBotao = (classe, texto, dir) => {
+            const btn = document.createElement("button");
+            btn.className = `btn-slide ${classe}`;
+            btn.textContent = texto;
+            btn.onclick = () => {
+                imagemIndex[produto.nome] =
+                    (imagemIndex[produto.nome] + dir + produto.cores.length) % produto.cores.length;
+                coresSelecionadas[produto.nome] =
+                    produto.cores[imagemIndex[produto.nome]].cor;
+                renderizarProdutosPedido();
+            };
+            return btn;
+        };
+        imagensWrap.append(
+            criarBotao("esq", "‹", -1),
+            criarBotao("dir", "›", 1)
+        );
+
+        const info = document.createElement("div");
+        info.className = "info-produto";
+        info.innerHTML = `
+            <h3>${produto.nome}</h3>
+            <span class="minimo-info">Mínimo de 10 unidades</span>
+        `;
+
+        const selectCor = document.createElement("select");
+        selectCor.className = "select-cor";
+        produto.cores.forEach(c => {
+            const opt = document.createElement("option");
+            opt.value = c.cor;
+            opt.textContent = c.cor;
+            opt.selected = c.cor === coresSelecionadas[produto.nome];
+            selectCor.appendChild(opt);
+        });
+        selectCor.onchange = e => {
+            const idx = produto.cores.findIndex(c => c.cor === e.target.value);
+            imagemIndex[produto.nome] = idx;
+            coresSelecionadas[produto.nome] = e.target.value;
+            renderizarProdutosPedido();
+        };
+
+        const controles = document.createElement("div");
+        controles.className = "controle-qtd";
+        controles.innerHTML = `
+            <button class="btn-qty" onclick="alterarQtdTemp('${produto.nome}', -10)">−10</button>
+            <button class="btn-qty" onclick="alterarQtdTemp('${produto.nome}', -1)">−1</button>
+            <span class="qtd-produto">${qtd}</span>
+            <button class="btn-qty" onclick="alterarQtdTemp('${produto.nome}', 1)">+1</button>
+            <button class="btn-qty" onclick="alterarQtdTemp('${produto.nome}', 10)">+10</button>
+        `;
+
+        const btnAdd = document.createElement("button");
+        btnAdd.className = "btn-add-carrinho";
+        btnAdd.textContent = "Adicionar ao orçamento";
+        btnAdd.disabled = qtd < 10;
+        btnAdd.onclick = () => adicionarItem(produto);
+
+        info.append(selectCor, controles, btnAdd);
+        li.append(imagensWrap, info);
+        lista.appendChild(li);
+    });
+}
+
+// ================= ENVIAR PEDIDO =================
+window.enviarPedido = async function () {
+    const nome = document.getElementById("nome-cliente")?.value;
+    const endereco = document.getElementById("endereco-cliente")?.value;
+    const cidade = document.getElementById("cidade-cliente")?.value;
+    const telefone = document.getElementById("telefone-cliente")?.value;
+
+    if (!nome || !endereco || !cidade || !telefone || itensPedido.length === 0) {
+        alert("Preencha todos os dados e adicione itens");
+        return;
+    }
+
+    try {
+        const response = await fetch("/pedido/gerar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cliente: nome,
+                endereco: endereco,
+                cidade: cidade,
+                telefone: telefone,
+                itens: itensPedido
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.erro || "Erro ao gerar orçamento");
+            return;
+        }
+
+        // preview
+        const lista = document.getElementById("resumo-itens");
+
+        let container = lista.querySelector(".orcamento-gerado");
+        if (!container) {
+            container = document.createElement("div");
+            container.className = "orcamento-gerado";
+            lista.prepend(container);
+        }
+
+        container.innerHTML = "";
+
+        const img = document.createElement("img");
+        img.src = data.link;
+        img.className = "preview-orcamento";
+        container.appendChild(img);
+
+        const btnWhats = document.createElement("button");
+        btnWhats.className = "btn-enviar-whatsapp";
+        btnWhats.textContent = "Enviar Orçamento 📲";
+        btnWhats.onclick = () => enviarWhatsApp(data.id, data.link);
+        container.appendChild(btnWhats);
+
+        itensPedido = [];
+        atualizarResumoPedido();
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao gerar orçamento");
+    }
+};
+
+// ================= ENVIAR WHATSAPP =================
+function enviarWhatsApp(id, urlImagem) {
+    const numero = "5512991306213";
+    const mensagem = `Orçamento ${id} gerado: ${urlImagem}`;
+    window.open(
+        `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`,
+        "_blank"
+    );
+    itensPedido = [];
+    atualizarResumoPedido();
+}
+
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".btn-cat")?.classList.add("ativa");
+    renderizarProdutosPedido();
+
+    // >>> ADIÇÃO: ITEM VINDO DA HOME <<<
+    const itemSalvo = localStorage.getItem("orcamento_inicial");
+    if (itemSalvo) {
+        itensPedido.push(JSON.parse(itemSalvo));
+        localStorage.removeItem("orcamento_inicial");
+    }
+    // <<< FIM DA ADIÇÃO <<<
+
+    atualizarResumoPedido();
+});

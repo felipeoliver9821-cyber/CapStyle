@@ -1,0 +1,349 @@
+from flask import Flask, render_template, request, redirect, url_for, abort, jsonify
+import json
+from PIL import Image, ImageDraw, ImageFont
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+import os
+import uuid
+import datetime
+import io
+import cloudinary
+import cloudinary.uploader
+
+# ================= ENV =================
+load_dotenv()
+
+# ================= CONFIG =================
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+TEMP_FOLDER = os.path.join(basedir, "temp")
+os.makedirs(TEMP_FOLDER, exist_ok=True)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# ================= CLOUDINARY =================
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
+
+# ================= MODELS =================
+class Produto(db.Model):
+    __tablename__ = "produtos"
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    categoria = db.Column(db.String(50), nullable=False)
+    cores = db.relationship(
+        "ProdutoCor",
+        backref="produto",
+        cascade="all, delete-orphan"
+    )
+
+class ProdutoCor(db.Model):
+    __tablename__ = "produto_cores"
+    id = db.Column(db.Integer, primary_key=True)
+    produto_id = db.Column(db.Integer, db.ForeignKey("produtos.id"), nullable=False)
+    cor = db.Column(db.String(50), nullable=False)
+    imagem = db.Column(db.String(200), nullable=False)
+
+class Orcamento(db.Model):
+    __tablename__ = "orcamentos"
+    id = db.Column(db.String(4), primary_key=True)
+    cliente = db.Column(db.String(100), nullable=False)
+    endereco = db.Column(db.String(200), nullable=False)
+    arquivo_imagem = db.Column(db.String(500), nullable=False)
+    criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+# ================= FUNÇÕES AUXILIARES =================
+def carregar_produtos():
+    produtos = {}
+    for produto in Produto.query.all():
+        if produto.categoria not in produtos:
+            produtos[produto.categoria] = []
+        produtos[produto.categoria].append({
+            "id": produto.id,
+            "nome": produto.nome,
+            "categoria": produto.categoria,
+            "cores": [{"cor": c.cor, "imagem": c.imagem} for c in produto.cores]
+        })
+    return produtos
+
+def gerar_id_orcamento():
+    while True:
+        ultimo = Orcamento.query.order_by(Orcamento.criado_em.desc()).first()
+
+        if not ultimo:
+            novo_id = "A001"
+        else:
+            letra = ultimo.id[0]
+            numero = int(ultimo.id[1:]) + 1
+            if numero > 999:
+                letra = chr(ord(letra) + 1)
+                numero = 1
+            novo_id = f"{letra}{str(numero).zfill(3)}"
+
+        if not Orcamento.query.get(novo_id):
+            return novo_id
+
+# ================= FUNÇÃO DE IMAGEM =================
+def gerar_imagem_orcamento(
+    id_pedido,
+    cliente,
+    endereco,
+    cidade,
+    telefone,
+    itens,
+    caminho_layout="static/images/orcamento.png",
+    caminho_saida="orcamento_final.png"
+):
+    imagem = Image.open(caminho_layout).convert("RGBA")
+    draw = ImageDraw.Draw(imagem)
+
+    # ---------- fontes ----------
+    try:
+        fonte_regular = ImageFont.truetype("arial.ttf", 30)
+        fonte_pequena = ImageFont.truetype("arial.ttf", 26)
+        fonte_codigo  = ImageFont.truetype("arial.ttf", 28)
+    except:
+        fonte_regular = fonte_pequena = fonte_codigo = ImageFont.load_default()
+
+    cor = (0, 51, 102)
+
+    # ---------- DATA ----------
+    data_atual = datetime.datetime.now().strftime("%d/%m/%Y")
+    draw.text((820, 514), data_atual, fill=cor, font=fonte_regular)
+
+    # ---------- CÓDIGO ----------
+    draw.text(
+        (200, 514),
+        f"Código: {id_pedido}",
+        fill=cor,
+        font=fonte_codigo
+    )
+
+    # ---------- CLIENTE ----------
+    draw.text((170, 610), cliente,  fill=cor, font=fonte_regular)
+    draw.text((182, 647), endereco, fill=cor, font=fonte_regular)
+    draw.text((160, 688), cidade,   fill=cor, font=fonte_regular)
+    draw.text((180, 725), telefone, fill=cor, font=fonte_regular)
+
+    # ---------- ITENS ----------
+    y_inicial = 895
+    altura_linha = 36
+
+    for index, item in enumerate(itens):
+        y = y_inicial + index * altura_linha
+
+        draw.text(
+            (180, y),
+            str(item.get("produto", "")),
+            fill=cor,
+            font=fonte_pequena
+        )
+
+        draw.text(
+            (700, y),
+            str(item.get("quantidade", "")),
+            fill=cor,
+            font=fonte_pequena
+        )
+
+        draw.text(
+            (880, y),
+            str(item.get("cor", "")),
+            fill=cor,
+            font=fonte_pequena
+        )
+
+    imagem.save(caminho_saida)
+    return caminho_saida
+
+# ================= CLOUDINARY WRAPPER =================
+def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens):
+    cidade = ""
+    telefone = ""
+
+    caminho_local = os.path.join(TEMP_FOLDER, f"{id_pedido}.png")
+
+    gerar_imagem_orcamento(
+        id_pedido=id_pedido,
+        cliente=cliente,
+        endereco=endereco,
+        cidade=cidade,
+        telefone=telefone,
+        itens=itens,
+        caminho_saida=caminho_local
+    )
+
+    upload = cloudinary.uploader.upload(
+        caminho_local,
+        folder="orcamentos",
+        public_id=id_pedido,
+        overwrite=True
+    )
+
+    return upload["secure_url"]
+
+
+# ================= ROTAS =================
+@app.route("/")
+def home():
+    return render_template("home.html", produtos=carregar_produtos())
+
+@app.route("/pedido")
+def pedido():
+    return render_template("pedido.html", produtos=carregar_produtos())
+
+@app.route("/pedido/gerar", methods=["POST"])
+def gerar_pedido():
+    dados = request.get_json()
+
+    cliente = dados.get("cliente", "").strip()
+    endereco = dados.get("endereco", "").strip()
+    itens = dados.get("itens", [])
+
+    if not cliente or not endereco or not itens:
+        return jsonify({"erro": "Dados incompletos"}), 400
+
+    id_orcamento = gerar_id_orcamento()
+    link = gerar_imagem_orcamento_cloudinary(id_orcamento, cliente, endereco, itens)
+
+    novo = Orcamento(
+        id=id_orcamento,
+        cliente=cliente,
+        endereco=endereco,
+        arquivo_imagem=link
+    )
+    db.session.add(novo)
+    db.session.commit()
+
+    return jsonify({"status": "ok", "id": id_orcamento, "link": link})
+
+@app.route("/pedido/enviar/<id_orcamento>", methods=["POST"])
+def enviar_orcamento(id_orcamento):
+    orc = Orcamento.query.get(id_orcamento)
+    if not orc:
+        return jsonify({"erro": "Orçamento não encontrado"}), 404
+
+    db.session.delete(orc)
+    db.session.commit()
+    return jsonify({"status": "ok"})
+
+# ================= ADMIN =================
+@app.route("/admin")
+def admin():
+    produtos = Produto.query.all()
+    return render_template("admin.html", itens=produtos)
+
+
+@app.route("/admin/add", methods=["GET", "POST"])
+def admin_add_produto():
+    if request.method == "GET":
+        return render_template("add.html")
+
+    nome = request.form.get("nome")
+    categoria = request.form.get("categoria")
+
+    if not nome or not categoria:
+        abort(400, "Dados obrigatórios")
+
+    produto = Produto(nome=nome, categoria=categoria)
+    db.session.add(produto)
+    db.session.commit()
+
+    for key in request.form:
+        if key.startswith("cor_"):
+            index = key.split("_")[1]
+            cor = request.form.get(key)
+            imagem = request.files.get(f"imagem_{index}")
+
+            if imagem and imagem.filename:
+                filename = f"{uuid.uuid4().hex}_{secure_filename(imagem.filename)}"
+                imagem.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+                db.session.add(
+                    ProdutoCor(
+                        produto_id=produto.id,
+                        cor=cor,
+                        imagem=filename
+                    )
+                )
+
+    db.session.commit()
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/edit/<int:id>")
+def admin_edit_produto(id):
+    produto = Produto.query.get_or_404(id)
+    return render_template("edit.html", item=produto)
+
+@app.route("/admin/update/<int:id>", methods=["POST"])
+def admin_update_produto(id):
+    produto = Produto.query.get_or_404(id)
+
+    produto.nome = request.form.get("nome")
+    produto.categoria = request.form.get("categoria")
+
+    # ---------- remover cores ----------
+    cores_removidas = request.form.get("cores_removidas")
+    if cores_removidas:
+        ids = json.loads(cores_removidas)
+        for cid in ids:
+            cor = ProdutoCor.query.get(cid)
+            if cor:
+                caminho = os.path.join(app.config["UPLOAD_FOLDER"], cor.imagem)
+                if os.path.exists(caminho):
+                    os.remove(caminho)
+                db.session.delete(cor)
+
+    # ---------- atualizar / criar cores ----------
+    cores = json.loads(request.form.get("cores", "[]"))
+
+    for index, c in enumerate(cores):
+        cor_nome = c.get("cor")
+        cor_id = c.get("id")
+
+        imagem_file = request.files.get(f"imagem_{index}")
+
+        if cor_id:
+            cor_obj = ProdutoCor.query.get(cor_id)
+            cor_obj.cor = cor_nome
+
+            if imagem_file:
+                filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
+                imagem_file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                cor_obj.imagem = filename
+        else:
+            if imagem_file:
+                filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
+                imagem_file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+                nova_cor = ProdutoCor(
+                    produto_id=produto.id,
+                    cor=cor_nome,
+                    imagem=filename
+                )
+                db.session.add(nova_cor)
+
+    db.session.commit()
+    return jsonify({"status": "ok"})
+
+
+
+
+# ================= MAIN =================
+if __name__ == "__main__":
+    app.run(debug=True)

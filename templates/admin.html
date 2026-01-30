@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<header>PAINEL ADMINISTRATIVO</header>
+
+<div class="container">
+
+    <div class="top-actions">
+        <a href="/">🏠 Ver Site</a>
+        <a href="/admin/add">➕ Novo Produto</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>Imagem</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Cores</th>
+            <th>Ações</th>
+        </tr>
+
+        {% for item in itens %}
+        <tr>
+
+            <td>
+                {% if item.cores and item.cores|length > 0 %}
+                    <img class="thumb" src="{{ url_for('static', filename='uploads/' ~ item.cores[0].imagem) }}">
+                {% else %}
+                    <span>Sem imagem</span>
+                {% endif %}
+            </td>
+
+            <td class="nome">{{ item.nome }}</td>
+
+            <td class="descricao">
+                {{ item.categoria }}
+            </td>
+
+            <td class="descricao">
+                {% for cor in item.cores %}
+                    {{ cor.cor }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+
+            <td>
+                <a class="btn btn-edit" href="/admin/edit/{{ item.id }}">Editar</a>
+                <a class="btn btn-del" href="/admin/delete/{{ item.id }}">Excluir</a>
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>

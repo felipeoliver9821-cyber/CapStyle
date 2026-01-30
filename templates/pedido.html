@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido / Orçamento — CapStyle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS BASE -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- CSS DO CATÁLOGO (REUTILIZA O HOME) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+    <!-- CSS DO PEDIDO -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pedido.css') }}">
+
+    <link rel="icon" href="/static/images/favicon.png">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+
+        <a href="/" class="navbar-logo">
+            <img src="/static/images/logotipo_sfundo.png" alt="CapStyle">
+        </a>
+
+        <div class="navbar-menu">
+            <a href="/pedido" class="active">Orçamento</a>
+            <span class="separator">|</span>
+            <a href="/">Pagina Inicial</a>
+            <span class="separator">|</span>
+            <a href="/admin">Admin(teste)</a>
+        </div>
+
+    </div>
+</header>
+
+<main id="pedido" class="containerhome pedido">
+
+    <div class="pedido-layout">
+
+        <!-- CATÁLOGO -->
+        <section class="pedido-catalogo">
+
+            <h1>Montagem do Orçamento</h1>
+            <h2>Escolha os produtos, cores e quantidades</h2>
+
+            <!-- FILTROS -->
+            <div class="filtros">
+                {% for cat in produtos.keys() %}
+                    <button class="btn-cat" data-cat="{{ cat }}" onclick="filtrarCategoria('{{ cat }}')">
+                        {{ cat }}
+                    </button>
+                {% endfor %}
+            </div>
+
+            <!-- LISTA DE PRODUTOS -->
+            <ul id="lista-produtos"></ul>
+
+        </section>
+
+        <!-- PREVIEW ORÇAMENTO -->
+        <aside class="pedido-orcamento">
+
+            <h2>Preview do Orçamento</h2>
+
+            <div id="resumo-itens" class="orcamento-vazio">
+                Nenhum item adicionado ao orçamento
+            </div>
+
+            <div class="dados-cliente">
+                <label>Nome da empresa ou cliente</label>
+                <input type="text" id="nome-cliente" placeholder="Ex: Empresa XYZ" required>
+            </div>
+
+            <div class="dados-cliente">
+                <label>Endereço da empresa</label>
+                <input type="text" id="endereco-cliente" placeholder="Ex: Rua ABC, 123" required>
+            </div>
+            <div class="dados-cliente">
+                <label>Cidade</label>
+                <input type="text" id="cidade-cliente" placeholder="Ex: São Paulo">
+            </div>
+
+            <div class="dados-cliente">
+                <label>Telefone / WhatsApp</label>
+                <input type="text" id="telefone-cliente" placeholder="Ex: (11) 99999-9999">
+            </div>
+
+
+            <button class="btn-finalizar" onclick="enviarPedido()">
+                Gerar orçamento
+            </button>
+
+        </aside>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 CapStyle — Todos os direitos reservados
+</footer>
+
+<script id="produtos-data" type="application/json">
+{{ produtos | tojson }}
+</script>
+
+<script src="{{ url_for('static', filename='js/pedido.js') }}"></script>
+
+</body>
+</html>

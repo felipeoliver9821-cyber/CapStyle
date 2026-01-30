@@ -1,0 +1,270 @@
+.admin-container {
+    max-width: 640px;
+    background: linear-gradient(180deg, #181820, #14141a);
+    padding: 34px;
+    border-radius: 18px;
+    margin: 40px auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+.admin-container h1 {
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 28px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #9aa4b2;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+/* ================= CAMPOS ================= */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.campo label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #e5e9f0;
+}
+
+.campo input,
+.campo select {
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    background: #0f172a;
+    color: #fff;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.campo input:focus,
+.campo select:focus {
+    box-shadow: 0 0 0 2px #2f80ed66;
+    background: #111c35;
+}
+
+/* ================= BLOCO DE CORES ================= */
+.bloco-cor {
+    background: #0b1220;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    animation: fadeIn 0.3s ease;
+}
+
+.bloco-cor h4 {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #6fb1ff;
+    font-weight: 600;
+}
+
+/* ================= BOTÃO ADICIONAR COR ================= */
+.btn-add-cor {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 2px dashed #2f80ed;
+    background: transparent;
+    color: #6fb1ff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: all 0.25s ease;
+}
+
+.btn-add-cor:hover {
+    background: #1e6fd9;
+    color: #fff;
+    border-style: solid;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(30,111,217,0.4);
+}
+
+/* ================= PREVIEW IMAGENS ================= */
+#preview-imagens {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+}
+
+#preview-imagens img {
+    width: 92px;
+    height: 92px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid #2f80ed;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    transition: transform 0.25s ease;
+}
+
+#preview-imagens img:hover {
+    transform: scale(1.06);
+}
+
+/* ================= BOTÃO SALVAR ================= */
+.btn-salvar {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, #1e6fd9, #2f80ed);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+}
+
+.btn-salvar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(47,128,237,0.45);
+}
+
+/* ================= ANIMAÇÕES ================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   ADMIN PRODUTO RESPONSIVO COMPLETO
+========================= */
+
+/* DESKTOP ULTRAWIDE */
+@media (min-width: 1600px) {
+    .admin-container {
+        max-width: 800px;
+        padding: 40px;
+        margin: 50px auto;
+    }
+
+    .admin-container h1 {
+        font-size: 32px;
+    }
+
+    #preview-imagens img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* DESKTOP / NOTEBOOK */
+@media (max-width: 1280px) {
+    .admin-container {
+        max-width: 640px;
+        padding: 34px;
+        margin: 40px auto;
+    }
+
+    .admin-container h1 {
+        font-size: 28px;
+    }
+
+    #preview-imagens img {
+        width: 92px;
+        height: 92px;
+    }
+}
+
+/* TABLET */
+@media (max-width: 1024px) {
+    .admin-container {
+        padding: 30px;
+        margin: 30px 20px;
+    }
+
+    .admin-container h1 {
+        font-size: 26px;
+    }
+
+    #preview-imagens img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* MOBILE GRANDE */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 28px;
+        margin: 25px 16px;
+    }
+
+    .admin-container h1 {
+        font-size: 24px;
+    }
+
+    #preview-imagens img {
+        width: 72px;
+        height: 72px;
+    }
+
+    .subtitulo {
+        font-size: 13px;
+    }
+}
+
+/* MOBILE PADRÃO */
+@media (max-width: 480px) {
+    .admin-container {
+        padding: 24px;
+        margin: 20px 12px;
+    }
+
+    .admin-container h1 {
+        font-size: 20px;
+    }
+
+    #preview-imagens img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .subtitulo {
+        font-size: 12px;
+    }
+}
+
+/* MOBILE MUITO PEQUENO */
+@media (max-width: 360px) {
+    .admin-container {
+        padding: 20px;
+        margin: 16px 10px;
+    }
+
+    #preview-imagens img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .campo input,
+    .campo select {
+        font-size: 12px;
+        padding: 9px;
+    }
+
+    .admin-container h1 {
+        font-size: 18px;
+    }
+}
+

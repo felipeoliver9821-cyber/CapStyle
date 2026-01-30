@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapStyle</title>
+
+    <!-- CSS BASE (SEU) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- CSS DO CATÁLOGO -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/images/favicon.png">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo">
+        <a href="#">
+            <img src="/static/images/logotipo_sfundo.png" alt="Logo">
+        </a>
+    </div>
+
+    <nav class="menu">
+        <a href="#" class="btn_nav">
+            <img class="home" src="/static/images/ico_paginainicial.png">
+            <span>Página inicial</span>
+        </a>
+
+        <a href="#catalogo" class="btn_nav">
+            <img class="catalogo" src="/static/images/ico_catalogo.png">
+            <span>Catálogo</span>
+        </a>
+
+        <a href="/pedido" class="btn_nav">
+            <img class="orcamento" src="/static/images/ico_orcamento.png">
+            <span>Orçamento</span>
+        </a>
+
+        <a href="#sobre" class="btn_nav">
+            <img class="sobrenos" src="/static/images/ico_sobrenos.png">
+            <span>Sobre nós</span>
+        </a>
+    </nav>
+</div>
+
+
+<!-- CATÁLOGO -->
+<div id="catalogo" class="containerhome catalogo">
+    <h1>Catálogo</h1>
+    <h2>Escolha o produto e solicite seu orçamento</h2>
+
+    <div class="filtros">
+        {% for cat in produtos.keys() %}
+            <button class="btn-cat" data-cat="{{ cat }}" onclick="filtrarCategoria('{{ cat }}')">
+                {{ cat }}
+            </button>
+        {% endfor %}
+    </div>
+
+    <ul id="lista-produtos"></ul>
+</div>
+
+
+
+<footer>
+    &copy; 2026 CapStyle - Todos os direitos reservados
+</footer>
+
+<!-- DADOS DOS PRODUTOS -->
+<script id="produtos-data" type="application/json">
+{{ produtos | tojson }}
+</script>
+
+<!-- JS DO CATÁLOGO -->
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+
+</body>
+</html>

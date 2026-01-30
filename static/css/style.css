@@ -1,0 +1,154 @@
+/* ================== RESET ================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* ================== BASE ================== */
+body {
+    background-color: #27538d;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    min-height: 100vh;
+    padding: 12px;
+}
+
+/* ================== QUANDO EXISTE SIDEBAR ================== */
+body:has(.sidebar) {
+    padding-left: 260px;
+}
+
+/* ================== SIDEBAR ================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: #0A1324;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 24px;
+    z-index: 100;
+}
+
+.sidebar .logo {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar .logo img {
+    max-width: 250px;
+}
+
+.sidebar .menu {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.sidebar .btn_nav {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 14px;
+    border-radius: 12px;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.25s;
+}
+
+.sidebar .btn_nav img {
+    width: 50px;
+    height: 50px;
+}
+
+.sidebar .btn_nav:hover {
+    background: #2E3440;
+    transform: translateX(4px);
+}
+
+/* ================== HEADER / CARRINHO ================== */
+.carrinho-header {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+}
+
+.carrinho-header img {
+    width: 50px;
+    height: 50px;
+}
+
+#contador-carrinho {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* ================== LINHA CARDÁPIO ================== */
+#cardapiolinha {
+    width: 1200px;
+    height: 36px;
+    display: block;
+    margin: 12px auto;
+}
+
+/* ================== CONTAINERS ================== */
+.container,
+.containerhome {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* ================== CAMPOS DE FORMULÁRIO ================== */
+.campo {
+    margin-bottom: 10px;
+}
+
+.campo input,
+.campo select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+}
+
+/* ================== FOOTER ================== */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 20px;
+    background: #181820;
+    border-radius: 12px;
+    color: #aaa;
+}
+
+/* ================== RESPONSIVO ================== */
+@media (max-width: 768px) {
+    body:has(.sidebar) {
+        padding-left: 80px;
+    }
+
+    .sidebar {
+        width: 80px;
+    }
+
+    .sidebar span {
+        display: none;
+    }
+}

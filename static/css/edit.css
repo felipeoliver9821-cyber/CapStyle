@@ -1,0 +1,364 @@
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* =========================
+   VARIÁVEIS
+========================= */
+:root {
+    --bg-main: #0b0f19;
+    --bg-card: #121826;
+    --bg-input: #0f172a;
+
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+
+    --border: #1f2937;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --shadow-soft: 0 10px 30px rgba(0,0,0,.25);
+    --shadow-strong: 0 25px 60px rgba(0,0,0,.45);
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+    background: radial-gradient(circle at top, #111827, #020617);
+    color: var(--text-main);
+    font-family: "Inter", system-ui, sans-serif;
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+header {
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    padding: 22px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: var(--shadow-soft);
+}
+
+/* =========================
+   FORM BOX
+========================= */
+.form-box {
+    max-width: 900px;
+    margin: 60px auto;
+    background: linear-gradient(180deg, var(--bg-card), #0f172a);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    box-shadow: var(--shadow-strong);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+/* =========================
+   TÍTULOS
+========================= */
+.form-box h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.form-box h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* =========================
+   INPUTS GERAIS
+========================= */
+input[type="text"],
+select {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+input::placeholder {
+    color: var(--text-muted);
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(59,130,246,.25);
+}
+
+/* =========================
+   CAMPO
+========================= */
+.campo {
+    margin-top: 18px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* =========================
+   CORES CONTAINER
+========================= */
+#cores-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+}
+
+/* =========================
+   COR ITEM
+========================= */
+.cor-item {
+    background: var(--bg-input);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,.05);
+    transition: .25s;
+    position: relative;
+}
+
+.cor-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* =========================
+   INPUT COR
+========================= */
+.input-cor {
+    margin-bottom: 10px;
+}
+
+/* =========================
+   PREVIEW IMAGEM
+========================= */
+.preview {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    background: #000;
+}
+
+/* =========================
+   INPUT FILE
+========================= */
+.input-imagem {
+    width: 100%;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+/* =========================
+   REMOVER
+========================= */
+.btn-remover {
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    transition: .2s;
+}
+
+.btn-remover:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+/* =========================
+   ADD COR
+========================= */
+#add-cor {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: transparent;
+    border: 2px dashed rgba(255,255,255,.25);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 15px;
+    transition: .25s;
+}
+
+#add-cor:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* =========================
+   BOTÃO SALVAR
+========================= */
+button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+    border: none;
+    border-radius: var(--radius-md);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .25s;
+}
+
+button[type="submit"]:hover {
+    filter: brightness(1.15);
+}
+
+/* =========================
+   HR
+========================= */
+hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+/* =========================
+   MOBILE
+========================= */
+/* =========================
+   FORM PRODUTO RESPONSIVO COMPLETO
+========================= */
+
+/* DESKTOP GRANDE */
+@media (min-width: 1600px) {
+    .form-box {
+        max-width: 1100px;
+        padding: 40px;
+    }
+
+    .form-box h2 {
+        font-size: 32px;
+    }
+
+    #cores-container {
+        gap: 20px;
+    }
+}
+
+/* DESKTOP / NOTEBOOK */
+@media (max-width: 1280px) {
+    .form-box {
+        max-width: 900px;
+        padding: 36px;
+        margin: 50px auto;
+    }
+
+    .form-box h2 {
+        font-size: 28px;
+    }
+
+    #cores-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 18px;
+    }
+}
+
+/* TABLET */
+@media (max-width: 1024px) {
+    .form-box {
+        padding: 32px;
+        margin: 40px 24px;
+    }
+
+    #cores-container {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    input, select {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+/* MOBILE GRANDE */
+@media (max-width: 768px) {
+    .form-box {
+        padding: 28px;
+        margin: 30px 20px;
+    }
+
+    #cores-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .form-box h2 {
+        font-size: 24px;
+    }
+
+    header {
+        font-size: 20px;
+    }
+}
+
+/* MOBILE PADRÃO */
+@media (max-width: 480px) {
+    .form-box {
+        padding: 22px;
+        margin: 20px 14px;
+    }
+
+    #cores-container {
+        grid-template-columns: 1fr;
+    }
+
+    input, select {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .form-box h2 {
+        font-size: 20px;
+    }
+}
+
+/* MOBILE MUITO PEQUENO */
+@media (max-width: 360px) {
+    .form-box h2 {
+        font-size: 18px;
+    }
+
+    input, select {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
