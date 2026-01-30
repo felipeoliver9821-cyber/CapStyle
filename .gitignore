@@ -1,52 +1,35 @@
-# ================= PYTHON =================
+# Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-*.so
+*.pdb
 *.egg
 *.egg-info/
-dist/
-build/
-
-# ================= VIRTUAL ENV =================
-venv/
-.env/
-.venv/
-ENV/
-env/
-
-# ================= FLASK =================
-instance/
 *.log
-
-# ================= DATABASE =================
 *.sqlite3
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.pytest_cache/
+
+# Flask
+instance/
 *.db
 
-# ================= MIGRATIONS =================
-migrations/versions/__pycache__/
-
-# ================= UPLOADS =================
-static/uploads/
-static/uploads/*
-
-# ================= GENERATED FILES =================
-*.png
-*.jpg
-*.jpeg
-*.webp
-
-# ================= SECRETS =================
-.env
-.env.local
-.env.production
-
-# ================= OS =================
+# OS files
 .DS_Store
 Thumbs.db
 
-# ================= IDE =================
+# IDEs / editores
 .vscode/
 .idea/
-*.swp
+*.sublime-project
+*.sublime-workspace
+
+# Uploads temporários
+static/uploads/
+temp/
