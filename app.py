@@ -26,7 +26,7 @@ TEMP_FOLDER = os.path.join(basedir, "temp")
 os.makedirs(TEMP_FOLDER, exist_ok=True)
 
 # ---------- USANDO POSTGRESQL DO RAILWAY ----------
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # substitui o SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL') 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
