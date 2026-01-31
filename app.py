@@ -25,7 +25,8 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 TEMP_FOLDER = os.path.join(basedir, "temp")
 os.makedirs(TEMP_FOLDER, exist_ok=True)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+# ---------- USANDO POSTGRESQL DO RAILWAY ----------
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # substitui o SQLite
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -67,9 +68,10 @@ class Orcamento(db.Model):
     criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 # ================= CRIA BANCO =================
+# Cria tabelas automaticamente ao rodar (PostgreSQL não precisa do arquivo .db)
 with app.app_context():
-    if not os.path.exists(os.path.join(basedir, "database.db")):
-        db.create_all()
+    db.create_all()
+
 
 
 # ================= FUNÇÕES AUXILIARES =================
