@@ -66,8 +66,11 @@ class Orcamento(db.Model):
     arquivo_imagem = db.Column(db.String(500), nullable=False)
     criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-if not os.path.exists("database.db"):
-    db.create_all()
+# ================= CRIA BANCO =================
+with app.app_context():
+    if not os.path.exists(os.path.join(basedir, "database.db")):
+        db.create_all()
+
 
 # ================= FUNÇÕES AUXILIARES =================
 def carregar_produtos():
