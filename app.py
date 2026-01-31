@@ -66,6 +66,9 @@ class Orcamento(db.Model):
     arquivo_imagem = db.Column(db.String(500), nullable=False)
     criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
+if not os.path.exists("database.db"):
+    db.create_all()
+
 # ================= FUNÇÕES AUXILIARES =================
 def carregar_produtos():
     produtos = {}
@@ -346,4 +349,6 @@ def admin_update_produto(id):
 
 # ================= MAIN =================
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
