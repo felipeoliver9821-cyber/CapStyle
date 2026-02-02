@@ -357,9 +357,27 @@ def admin_update_produto(id):
                         imagem=filename
                     )
                 )
+@app.route("/admin/delete/<int:id>")
+def admin_delete_produto(id):
+    if not session.get("admin_logado"):
+        return redirect(url_for("admin_login"))
 
+    produto = Produto.query.get_or_404(id)
+
+    # Apagar imagens das cores
+    for cor in produto.cores:
+        caminho = os.path.join(app.config["UPLOAD_FOLDER"], cor.imagem)
+        if os.path.exists(caminho):
+            os.remove(caminho)
+        db.session.delete(cor)
+
+    # Apagar o produto
+    db.session.delete(produto)
     db.session.commit()
-    return jsonify({"status": "ok"})
+
+    flash(f"Produto '{produto.nome}' excluído com sucesso!", "sucesso")
+    return redirect(url_for("admin"))
+
 
 # ================= MAIN =================
 if __name__ == "__main__":

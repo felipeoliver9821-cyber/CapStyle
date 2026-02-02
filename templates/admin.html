@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
 <body>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 
 <header>PAINEL ADMINISTRATIVO</header>
 
@@ -51,8 +51,14 @@
 
             <td>
                 <a class="btn btn-edit" href="/admin/edit/{{ item.id }}">Editar</a>
-                <a class="btn btn-del" href="/admin/delete/{{ item.id }}">Excluir</a>
+
+                <!-- LINK PARA EXCLUIR VIA GET -->
+                <a class="btn btn-del" href="{{ url_for('admin_delete_produto', id=item.id) }}"
+                onclick="return confirm('Tem certeza que deseja excluir este produto?');">
+                    Excluir
+                </a>
             </td>
+
 
         </tr>
         {% endfor %}
