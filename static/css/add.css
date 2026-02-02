@@ -1,3 +1,15 @@
+body {
+    background-color: #27538d;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    min-height: 100vh;
+    padding-top: 130px; /* Ajuste navbar */
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+/* ================= ADMIN CONTAINER ================= */
 .admin-container {
     max-width: 640px;
     background: linear-gradient(180deg, #181820, #14141a);
@@ -5,12 +17,14 @@
     border-radius: 18px;
     margin: 40px auto;
     box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    transition: all 0.3s ease;
 }
 
 .admin-container h1 {
     text-align: center;
     margin-bottom: 6px;
     font-size: 28px;
+    word-wrap: break-word;
 }
 
 .subtitulo {
@@ -98,6 +112,7 @@
     gap: 12px;
     flex-wrap: wrap;
     margin-bottom: 26px;
+    justify-content: center;
 }
 
 #preview-imagens img {
@@ -136,135 +151,63 @@
 
 /* ================= ANIMAÇÕES ================= */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* =========================
-   ADMIN PRODUTO RESPONSIVO COMPLETO
-========================= */
+/* ================= RESPONSIVIDADE COMPLETA ================= */
 
-/* DESKTOP ULTRAWIDE */
+/* ULTRAWIDE DESKTOP */
 @media (min-width: 1600px) {
-    .admin-container {
-        max-width: 800px;
-        padding: 40px;
-        margin: 50px auto;
-    }
-
-    .admin-container h1 {
-        font-size: 32px;
-    }
-
-    #preview-imagens img {
-        width: 120px;
-        height: 120px;
-    }
+    .admin-container { max-width: 900px; padding: 40px; margin: 50px auto; }
+    .admin-container h1 { font-size: 34px; }
+    #preview-imagens img { width: 140px; height: 140px; }
 }
 
-/* DESKTOP / NOTEBOOK */
-@media (max-width: 1280px) {
-    .admin-container {
-        max-width: 640px;
-        padding: 34px;
-        margin: 40px auto;
-    }
+/* DESKTOP */
+@media (max-width: 1600px) and (min-width: 1281px) {
+    .admin-container { max-width: 800px; padding: 38px; margin: 45px auto; }
+    .admin-container h1 { font-size: 32px; }
+    #preview-imagens img { width: 120px; height: 120px; }
+}
 
-    .admin-container h1 {
-        font-size: 28px;
-    }
-
-    #preview-imagens img {
-        width: 92px;
-        height: 92px;
-    }
+/* NOTEBOOK */
+@media (max-width: 1280px) and (min-width: 1025px) {
+    .admin-container { max-width: 640px; padding: 34px; margin: 40px auto; }
+    .admin-container h1 { font-size: 28px; }
+    #preview-imagens img { width: 92px; height: 92px; }
 }
 
 /* TABLET */
-@media (max-width: 1024px) {
-    .admin-container {
-        padding: 30px;
-        margin: 30px 20px;
-    }
-
-    .admin-container h1 {
-        font-size: 26px;
-    }
-
-    #preview-imagens img {
-        width: 80px;
-        height: 80px;
-    }
+@media (max-width: 1024px) and (min-width: 769px) {
+    .admin-container { padding: 30px; margin: 30px 20px; }
+    .admin-container h1 { font-size: 26px; }
+    #preview-imagens img { width: 80px; height: 80px; }
 }
 
 /* MOBILE GRANDE */
-@media (max-width: 768px) {
-    .admin-container {
-        padding: 28px;
-        margin: 25px 16px;
-    }
-
-    .admin-container h1 {
-        font-size: 24px;
-    }
-
-    #preview-imagens img {
-        width: 72px;
-        height: 72px;
-    }
-
-    .subtitulo {
-        font-size: 13px;
-    }
+@media (max-width: 768px) and (min-width: 481px) {
+    .admin-container { padding: 28px; margin: 25px 16px; }
+    .admin-container h1 { font-size: 24px; }
+    #preview-imagens img { width: 72px; height: 72px; }
+    .subtitulo { font-size: 13px; }
+    .campo input, .campo select { font-size: 13px; padding: 11px; }
 }
 
 /* MOBILE PADRÃO */
-@media (max-width: 480px) {
-    .admin-container {
-        padding: 24px;
-        margin: 20px 12px;
-    }
-
-    .admin-container h1 {
-        font-size: 20px;
-    }
-
-    #preview-imagens img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .subtitulo {
-        font-size: 12px;
-    }
+@media (max-width: 480px) and (min-width: 361px) {
+    .admin-container { padding: 24px; margin: 20px 12px; }
+    .admin-container h1 { font-size: 20px; }
+    #preview-imagens img { width: 60px; height: 60px; }
+    .subtitulo { font-size: 12px; }
+    .campo input, .campo select { font-size: 12px; padding: 10px; }
 }
 
 /* MOBILE MUITO PEQUENO */
 @media (max-width: 360px) {
-    .admin-container {
-        padding: 20px;
-        margin: 16px 10px;
-    }
-
-    #preview-imagens img {
-        width: 52px;
-        height: 52px;
-    }
-
-    .campo input,
-    .campo select {
-        font-size: 12px;
-        padding: 9px;
-    }
-
-    .admin-container h1 {
-        font-size: 18px;
-    }
+    .admin-container { padding: 20px; margin: 16px 10px; }
+    .admin-container h1 { font-size: 18px; }
+    #preview-imagens img { width: 52px; height: 52px; }
+    .campo input, .campo select { font-size: 11px; padding: 9px; }
+    .subtitulo { font-size: 11px; }
 }
-

@@ -3,79 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CapStyle</title>
+    <title>CapStyle | Bonés Personalizados</title>
 
-    <!-- CSS BASE (SEU) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="description" content="Bonés personalizados sob medida. Qualidade premium, personalização completa e orçamento rápido.">
 
-    <!-- CSS DO CATÁLOGO -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <link rel="icon" href="/static/images/favicon.png">
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-    <div class="logo">
-        <a href="#">
-            <img src="/static/images/logotipo_sfundo.png" alt="Logo">
+<!-- ================= HEADER ================= -->
+
+<header class="navbar">
+    <div class="navbar-container">
+        <a href="#hero" class="navbar-logo">
+            <img src="/static/images/logotipo_sfundo.png" alt="CapStyle">
         </a>
+
+        <!-- botão hamburguer -->
+        <div class="menu-toggle" id="menuToggle">☰</div>
+
+        <nav class="navbar-menu" id="navbarMenu">
+            <a href="#hero" class="active">Início</a>
+            <span class="separator">|</span>
+            <a href="#catalogo">Catálogo</a>
+            <span class="separator">|</span>
+            <a href="/pedido">Orçamento</a>
+            <span class="separator">|</span>
+            <a href="#como-funciona">Como funciona</a>
+            <span class="separator">|</span>
+            <a href="#contato">Contato</a>
+        </nav>
+    </div>
+</header>
+
+
+<!-- ================= HERO ================= -->
+<section id="hero" class="hero">
+    <div class="hero-content">
+        <h1>Bonés personalizados para sua marca</h1>
+        <p>Produção profissional, personalização total e preços competitivos</p>
+
+        <div class="hero-buttons">
+            <a href="#catalogo" class="btn-primary">Ver Catálogo</a>
+            <a href="#contato" class="btn-secondary">Pedir Orçamento</a>
+        </div>
+    </div>
+</section>
+
+<!-- ================= DIFERENCIAIS ================= -->
+<section class="diferenciais">
+    <div class="diferencial">
+        <h3>Qualidade Premium</h3>
+        <p>Materiais selecionados e acabamento profissional</p>
     </div>
 
-    <nav class="menu">
-        <a href="#" class="btn_nav">
-            <img class="home" src="/static/images/ico_paginainicial.png">
-            <span>Página inicial</span>
-        </a>
+    <div class="diferencial">
+        <h3>Personalização Total</h3>
+        <p>Bordado, estampa, cores e modelos variados</p>
+    </div>
 
-        <a href="#catalogo" class="btn_nav">
-            <img class="catalogo" src="/static/images/ico_catalogo.png">
-            <span>Catálogo</span>
-        </a>
+    <div class="diferencial">
+        <h3>Produção Ágil</h3>
+        <p>Prazos claros e entrega garantida</p>
+    </div>
 
-        <a href="/pedido" class="btn_nav">
-            <img class="orcamento" src="/static/images/ico_orcamento.png">
-            <span>Orçamento</span>
-        </a>
+    <div class="diferencial">
+        <h3>Preço Justo</h3>
+        <p>Ideal para marcas, eventos e atacado</p>
+    </div>
+</section>
 
-        <a href="#sobre" class="btn_nav">
-            <img class="sobrenos" src="/static/images/ico_sobrenos.png">
-            <span>Sobre nós</span>
-        </a>
-    </nav>
-</div>
-
-
-<!-- CATÁLOGO -->
-<div id="catalogo" class="containerhome catalogo">
+<!-- ================= CATÁLOGO ================= -->
+<section id="catalogo" class="containerhome catalogo">
     <h1>Catálogo</h1>
-    <h2>Escolha o produto e solicite seu orçamento</h2>
+    <h2>Escolha o modelo ideal e solicite seu orçamento</h2>
 
     <div class="filtros">
         {% for cat in produtos.keys() %}
-            <button class="btn-cat" data-cat="{{ cat }}" onclick="filtrarCategoria('{{ cat }}')">
+            <button class="btn-cat" onclick="filtrarCategoria('{{ cat }}')">
                 {{ cat }}
             </button>
         {% endfor %}
     </div>
 
     <ul id="lista-produtos"></ul>
-</div>
+</section>
 
+<!-- ================= COMO FUNCIONA ================= -->
+<section id="como-funciona" class="como-funciona">
+    <h2>Como Funciona</h2>
 
+    <div class="passos">
+        <div class="passo"><span>1</span><p>Escolha o modelo</p></div>
+        <div class="passo"><span>2</span><p>Adicione ao Orçamento</p></div>
+        <div class="passo"><span>3</span><p>Solicite o orçamento</p></div>
+        <div class="passo"><span>4</span><p>Continue o Pedido com nossos atendentes</p></div>
+    </div>
+</section>
 
+<!-- ================= GALERIA ================= -->
+<section id="galeria" class="galeria">
+    <h2>Trabalhos Realizados</h2>
+
+    <div class="galeria-grid">
+        <img src="/static/images/clientes/dayfit1.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/dayfit2.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/expoauto1.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/expoauto2.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/racingpark1.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/racingpark2.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/racingpark3.jpeg" alt="Boné personalizado">
+        <img src="/static/images/clientes/racingpark4.jpeg" alt="Boné personalizado">
+    </div>
+</section>
+
+<!-- ================= AVALIAÇÕES ================= -->
+<section id="avaliacoes" class="avaliacoes">
+    <h2>Clientes Satisfeitos</h2>
+
+    <div class="avaliacao">
+        <p>“Qualidade absurda, recomendo demais.”</p>
+        <span>★★★★★</span>
+        <span>Felipe A., startup</span>
+    </div>
+
+    <div class="avaliacao">
+        <p>“Produto profissional, ótimo custo-benefício.”</p>
+        <span>★★★★★</span>
+        <span>Camila T., e-commerce</span>
+    </div>
+
+    <div class="avaliacao">
+        <p>“Atendimento ágil e resultado acima do esperado.”</p>
+        <span>★★★★★</span>
+        <span>João P.</span>
+    </div>
+
+    <div class="avaliacao">
+        <p>“Cores fiéis e bordado muito bem feito.”</p>
+        <span>★★★★★</span>
+        <span>Mariana R., agência de eventos</span>
+    </div>
+
+    <div class="avaliacao">
+        <p>“Entrega rápida e personalização perfeita.”</p>
+        <span>★★★★★</span>
+        <span>Rafael S., lojista</span>
+    </div>
+
+    <div class="avaliacao">
+        <p>“Qualidade excelente e acabamento impecável.”</p>
+        <span>★★★★★</span>
+        <span>Lucas M. marca de streetwear</span>
+    </div>
+
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="sobre">
+    <h2>Dúvidas Frequentes</h2>
+
+    <p><strong>Quantidade mínima?</strong><br>Depende do modelo.</p>
+    <p><strong>Prazo de produção?</strong><br>Média de X dias úteis.</p>
+    <p><strong>Fazem envio?</strong><br>Sim, para todo o Brasil.</p>
+    <p><strong>Formas de pagamento?</strong><br>Pix, transferência ou combinado.</p>
+</section>
+
+<section id="sobre-nos" class="sobre-nos">
+    <div class="sobre-nos-container">
+        <h2>Sobre a CapStyle</h2>
+
+        <p class="sobre-nos-texto">
+            A <strong>CapStyle</strong> é especializada na produção de bonés personalizados
+            com alto padrão de qualidade. Trabalhamos com foco em marcas, empresas,
+            eventos e revendedores que buscam um produto profissional,
+            durável e com identidade própria.
+        </p>
+
+        <p class="sobre-nos-texto">
+            Unimos materiais selecionados, processos eficientes e atenção aos detalhes
+            para entregar bonés que fortalecem marcas e elevam a percepção de valor.
+            Nosso compromisso é oferecer personalização completa, prazos claros
+            e um atendimento direto e transparente.
+        </p>
+
+        <div class="sobre-nos-destaques">
+            <div class="destaque">
+                <strong>Qualidade</strong>
+                <span>Padrão premium em cada detalhe</span>
+            </div>
+
+            <div class="destaque">
+                <strong>Confiança</strong>
+                <span>Processos claros e entrega garantida</span>
+            </div>
+
+            <div class="destaque">
+                <strong>Personalização</strong>
+                <span>Bonés feitos para sua marca</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= CONTATO ================= -->
+<section id="contato" class="cta-final">
+    <h2>Vamos criar seus bonés?</h2>
+    <p>Fale com a gente e receba um orçamento rápido.</p>
+
+    <a href="/pedido" class="btn-primary">Solicitar Orçamento</a>
+</section>
+
+<!-- ================= FOOTER ================= -->
 <footer>
-    &copy; 2026 CapStyle - Todos os direitos reservados
+    &copy; 2026 CapStyle — Todos os direitos reservados
 </footer>
 
-<!-- DADOS DOS PRODUTOS -->
+<!-- ================= DADOS ================= -->
 <script id="produtos-data" type="application/json">
 {{ produtos | tojson }}
 </script>
 
-<!-- JS DO CATÁLOGO -->
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 
 </body>

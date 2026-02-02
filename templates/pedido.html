@@ -5,9 +5,6 @@
     <title>Pedido / Orçamento — CapStyle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CSS BASE -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
     <!-- CSS DO CATÁLOGO (REUTILIZA O HOME) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 
@@ -20,19 +17,24 @@
 
 <header class="navbar">
     <div class="navbar-container">
-
-        <a href="/" class="navbar-logo">
+        <a href="#hero" class="navbar-logo">
             <img src="/static/images/logotipo_sfundo.png" alt="CapStyle">
         </a>
 
-        <div class="navbar-menu">
-            <a href="/pedido" class="active">Orçamento</a>
-            <span class="separator">|</span>
-            <a href="/">Pagina Inicial</a>
-            <span class="separator">|</span>
-            <a href="/admin">Admin(teste)</a>
-        </div>
+        <!-- botão hamburguer -->
+        <div class="menu-toggle" id="menuToggle">☰</div>
 
+        <nav class="navbar-menu" id="navbarMenu">
+            <a href="/" class="active">Início</a>
+            <span class="separator">|</span>
+            <a href="/#catalogo">Catálogo</a>
+            <span class="separator">|</span>
+            <a href="/pedido">Orçamento</a>
+            <span class="separator">|</span>
+            <a href="/#como-funciona">Como funciona</a>
+            <span class="separator">|</span>
+            <a href="/#contato">Contato</a>
+        </nav>
     </div>
 </header>
 
@@ -107,6 +109,7 @@
 {{ produtos | tojson }}
 </script>
 
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 <script src="{{ url_for('static', filename='js/pedido.js') }}"></script>
 
 </body>

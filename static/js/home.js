@@ -145,6 +145,30 @@ function renderizarProdutos() {
     });
 }
 
+const menuToggle = document.getElementById('menuToggle');
+const navbarMenu = document.getElementById('navbarMenu');
+
+menuToggle.addEventListener('click', function(e) {
+    e.stopPropagation(); // evita que o clique feche imediatamente
+    navbarMenu.classList.toggle('active');
+    menuToggle.classList.toggle('open');
+
+    // muda o símbolo do botão
+    menuToggle.textContent = menuToggle.classList.contains('open') ? '❌' : '☰';
+});
+
+// fecha ao clicar fora
+document.addEventListener('click', function(e) {
+    if(navbarMenu.classList.contains('active') && !navbarMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+        navbarMenu.classList.remove('active');
+        menuToggle.classList.remove('open');
+        menuToggle.textContent = '☰';
+    }
+});
+
+
+
+
 // ================= INIT =================
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".btn-cat")[0]?.classList.add("ativa");

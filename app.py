@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, abort, jsonify
+from flask import Flask, render_template, request, redirect, url_for, abort, jsonify, session, flash
 import json
 from PIL import Image, ImageDraw, ImageFont
 from flask_sqlalchemy import SQLAlchemy
@@ -25,9 +25,22 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 TEMP_FOLDER = os.path.join(basedir, "temp")
 os.makedirs(TEMP_FOLDER, exist_ok=True)
 
-# ---------- USANDO POSTGRESQL DO RAILWAY ----------
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL') 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# ---------- BANCO DE DADOS (POSTGRESQL RAILWAY / LOCAL) ----------
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    # Corrige postgres:// → postgresql:// (Railway)
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL.replace(
+        "postgres://", "postgresql://"
+    )
+else:
+    # Fallback local
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///capstyle.db"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# ====== SESSÃO ======
+app.secret_key = os.getenv("SECRET_KEY", "uma_chave_qualquer_aqui")
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -68,11 +81,8 @@ class Orcamento(db.Model):
     criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 # ================= CRIA BANCO =================
-# Cria tabelas automaticamente ao rodar (PostgreSQL não precisa do arquivo .db)
 with app.app_context():
     db.create_all()
-
-
 
 # ================= FUNÇÕES AUXILIARES =================
 def carregar_produtos():
@@ -119,7 +129,6 @@ def gerar_imagem_orcamento(
     imagem = Image.open(caminho_layout).convert("RGBA")
     draw = ImageDraw.Draw(imagem)
 
-    # ---------- fontes ----------
     try:
         fonte_regular = ImageFont.truetype("arial.ttf", 30)
         fonte_pequena = ImageFont.truetype("arial.ttf", 26)
@@ -129,51 +138,24 @@ def gerar_imagem_orcamento(
 
     cor = (0, 51, 102)
 
-    # ---------- DATA ----------
     data_atual = datetime.datetime.now().strftime("%d/%m/%Y")
     draw.text((820, 514), data_atual, fill=cor, font=fonte_regular)
 
-    # ---------- CÓDIGO ----------
-    draw.text(
-        (200, 514),
-        f"Código: {id_pedido}",
-        fill=cor,
-        font=fonte_codigo
-    )
+    draw.text((200, 514), f"Código: {id_pedido}", fill=cor, font=fonte_codigo)
 
-    # ---------- CLIENTE ----------
     draw.text((170, 610), cliente,  fill=cor, font=fonte_regular)
     draw.text((182, 647), endereco, fill=cor, font=fonte_regular)
     draw.text((160, 688), cidade,   fill=cor, font=fonte_regular)
     draw.text((180, 725), telefone, fill=cor, font=fonte_regular)
 
-    # ---------- ITENS ----------
     y_inicial = 895
     altura_linha = 36
 
     for index, item in enumerate(itens):
         y = y_inicial + index * altura_linha
-
-        draw.text(
-            (180, y),
-            str(item.get("produto", "")),
-            fill=cor,
-            font=fonte_pequena
-        )
-
-        draw.text(
-            (700, y),
-            str(item.get("quantidade", "")),
-            fill=cor,
-            font=fonte_pequena
-        )
-
-        draw.text(
-            (880, y),
-            str(item.get("cor", "")),
-            fill=cor,
-            font=fonte_pequena
-        )
+        draw.text((180, y), str(item.get("produto", "")), fill=cor, font=fonte_pequena)
+        draw.text((700, y), str(item.get("quantidade", "")), fill=cor, font=fonte_pequena)
+        draw.text((880, y), str(item.get("cor", "")), fill=cor, font=fonte_pequena)
 
     imagem.save(caminho_saida)
     return caminho_saida
@@ -203,7 +185,6 @@ def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens):
     )
 
     return upload["secure_url"]
-
 
 # ================= ROTAS =================
 @app.route("/")
@@ -249,15 +230,45 @@ def enviar_orcamento(id_orcamento):
     db.session.commit()
     return jsonify({"status": "ok"})
 
+# ================= ADMIN LOGIN =================
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        usuario = request.form.get("usuario")
+        senha = request.form.get("senha")
+
+        # Usuário e senha do admin
+        admin_user = os.getenv("ADMIN_USER", "capstyle")
+        admin_pass = os.getenv("ADMIN_PASS", "a1B2C3D4E5F612#")
+
+        if usuario == admin_user and senha == admin_pass:
+            session["admin_logado"] = True
+            return redirect(url_for("admin"))
+        else:
+            flash("Usuário ou senha incorretos", "erro")
+            return redirect(url_for("admin_login"))
+
+    return render_template("logar.html")
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin_logado", None)
+    return redirect(url_for("home"))
+
 # ================= ADMIN =================
 @app.route("/admin")
 def admin():
+    if not session.get("admin_logado"):
+        return redirect(url_for("admin_login"))
+    
     produtos = Produto.query.all()
     return render_template("admin.html", itens=produtos)
 
-
 @app.route("/admin/add", methods=["GET", "POST"])
 def admin_add_produto():
+    if not session.get("admin_logado"):
+        return redirect(url_for("admin_login"))
+
     if request.method == "GET":
         return render_template("add.html")
 
@@ -292,20 +303,24 @@ def admin_add_produto():
     db.session.commit()
     return redirect(url_for("admin"))
 
-
 @app.route("/admin/edit/<int:id>")
 def admin_edit_produto(id):
+    if not session.get("admin_logado"):
+        return redirect(url_for("admin_login"))
+
     produto = Produto.query.get_or_404(id)
     return render_template("edit.html", item=produto)
 
 @app.route("/admin/update/<int:id>", methods=["POST"])
 def admin_update_produto(id):
+    if not session.get("admin_logado"):
+        return redirect(url_for("admin_login"))
+
     produto = Produto.query.get_or_404(id)
 
     produto.nome = request.form.get("nome")
     produto.categoria = request.form.get("categoria")
 
-    # ---------- remover cores ----------
     cores_removidas = request.form.get("cores_removidas")
     if cores_removidas:
         ids = json.loads(cores_removidas)
@@ -317,19 +332,16 @@ def admin_update_produto(id):
                     os.remove(caminho)
                 db.session.delete(cor)
 
-    # ---------- atualizar / criar cores ----------
     cores = json.loads(request.form.get("cores", "[]"))
 
     for index, c in enumerate(cores):
         cor_nome = c.get("cor")
         cor_id = c.get("id")
-
         imagem_file = request.files.get(f"imagem_{index}")
 
         if cor_id:
             cor_obj = ProdutoCor.query.get(cor_id)
             cor_obj.cor = cor_nome
-
             if imagem_file:
                 filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
                 imagem_file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
@@ -338,24 +350,18 @@ def admin_update_produto(id):
             if imagem_file:
                 filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
                 imagem_file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-
-                nova_cor = ProdutoCor(
-                    produto_id=produto.id,
-                    cor=cor_nome,
-                    imagem=filename
+                db.session.add(
+                    ProdutoCor(
+                        produto_id=produto.id,
+                        cor=cor_nome,
+                        imagem=filename
+                    )
                 )
-                db.session.add(nova_cor)
 
     db.session.commit()
     return jsonify({"status": "ok"})
 
-
-
-
 # ================= MAIN =================
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 8080))  # Railway exige usar a PORT
-    app.run(host="0.0.0.0", port=port)
-
-
+    port = int(os.environ.get("PORT", 8080))
+    app.run(debug=True, host="0.0.0.0", port=port)

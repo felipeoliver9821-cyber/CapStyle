@@ -1,11 +1,20 @@
 /* ==================================================
    RESET BÁSICO LOCAL
 ================================================== */
+
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
 
 /* ==================================================
    SCROLL SUAVE
@@ -14,93 +23,6 @@ html {
     scroll-behavior: smooth;
 }
 
-/* ==================================================
-   NAVBAR PREMIUM – IDENTIDADE AZUL
-================================================== */
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10,19,36,0.85); /* Azul Marinho Profundo */
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.navbar-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    height: 72px;
-    padding: 0 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* LOGO */
-.navbar-logo img {
-    height: 95px;
-}
-
-/* MENU CENTRAL */
-.navbar-menu {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-/* LINKS */
-.navbar-menu a {
-    position: relative;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: #E5E9F0; /* Cinza claro premium */
-    text-decoration: none;
-    padding: 6px 2px;
-    transition: color 0.3s ease;
-}
-
-/* SEPARADOR | */
-.navbar-menu .separator {
-    color: rgba(255,255,255,0.25);
-    font-size: 14px;
-    user-select: none;
-}
-
-/* LINHA ANIMADA NO HOVER */
-.navbar-menu a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(
-        90deg,
-        #1E6FD9,
-        #2F80ED
-    );
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
-
-/* HOVER */
-.navbar-menu a:hover {
-    color: #6FB1FF; /* Azul Claro UI */
-}
-
-.navbar-menu a:hover::after {
-    width: 100%;
-}
-
-/* ITEM ATIVO */
-.navbar-menu a.active {
-    color: #FFFFFF;
-}
-
-.navbar-menu a.active::after {
-    width: 100%;
-}
 
 /* ==================================================
    CONTAINER GERAL
@@ -137,6 +59,12 @@ html {
 ================================================== */
 .pedido-catalogo {
     width: 100%;
+}
+
+.pedido-catalogo h1{
+    display: flex;
+    text-align: center;
+    justify-content: center;
 }
 
 /* ==================================================
@@ -316,151 +244,211 @@ html {
 /* ==================================================
    TELAS MUITO GRANDES (4K / ULTRAWIDE)
 ================================================== */
+/* ================= ULTRAWIDE / 4K */
 @media (min-width: 1600px) {
-    .navbar-container,
     .containerhome.pedido {
         max-width: 1600px;
+        padding: 60px 48px 100px;
     }
 
     .pedido-layout {
         gap: 48px;
     }
-}
-
-/* ==================================================
-   NOTEBOOKS MÉDIOS
-================================================== */
-@media (max-width: 1280px) {
-    .navbar-container {
-        padding: 0 24px;
-    }
-
-    .containerhome.pedido {
-        padding: 36px 24px 72px;
-    }
-
-    .pedido-layout {
-        gap: 32px;
-    }
-}
-
-/* ==================================================
-   TABLET / IPAD
-================================================== */
-@media (max-width: 1024px) {
-    .pedido-layout {
-        grid-template-columns: 1fr;
-    }
 
     .pedido-orcamento {
-        position: relative;
-        top: 0;
-        box-shadow: 0 18px 40px rgba(0,0,0,.5);
+        top: 140px;
+        padding: 32px;
     }
 
-    .navbar-menu {
-        gap: 12px;
+    .pedido-orcamento h2 {
+        font-size: 20px;
+    }
+
+    .dados-cliente input {
+        padding: 16px;
+        font-size: 16px;
+    }
+
+    .btn-finalizar,
+    .btn-enviar-whatsapp {
+        padding: 18px;
+        font-size: 16px;
+    }
+
+    .preview-vazio {
+        padding: 60px 20px;
+        font-size: 16px;
     }
 }
 
-/* ==================================================
-   MOBILE GRANDE (IPHONE PLUS / ANDROID)
-================================================== */
-@media (max-width: 768px) {
-    .navbar-container {
-        height: auto;
-        padding: 14px 20px;
+/* ================= DESKTOP / NOTEBOOK */
+@media (max-width: 1280px) {
+    .containerhome.pedido {
+        max-width: 1200px;
+        padding: 48px 32px 80px;
     }
 
-    .navbar-menu a {
-        font-size: 13px;
+    .pedido-layout {
+        gap: 36px;
     }
 
-    .containerhome.pedido h1 {
-        font-size: 22px;
+    .pedido-orcamento h2 {
+        font-size: 18px;
     }
 
-    .containerhome.pedido h2 {
+    .dados-cliente input {
+        padding: 14px;
         font-size: 14px;
     }
 
-    .orcamento-item {
-        padding: 12px;
+    .btn-finalizar,
+    .btn-enviar-whatsapp {
+        padding: 16px;
+        font-size: 15px;
     }
 }
 
-/* ==================================================
-   MOBILE PADRÃO
-================================================== */
-@media (max-width: 480px) {
-    .navbar-logo img {
-        height: 32px;
-    }
-
-    .navbar-menu {
-        gap: 8px;
-    }
-
-    .navbar-menu a {
-        font-size: 12px;
-    }
-
-    .containerhome.pedido {
-        padding: 24px 16px 52px;
+/* ================= TABLET */
+@media (max-width: 1024px) {
+    .pedido-layout {
+        grid-template-columns: 1fr; /* colunas empilhadas */
+        gap: 28px;
     }
 
     .pedido-orcamento {
-        padding: 18px;
-        border-radius: 18px;
+        position: relative; /* deixa sticky desligado em tablets */
+        top: auto;
     }
 
-    .orcamento-info strong {
-        font-size: 13px;
-    }
-
-    .orcamento-info span {
-        font-size: 11px;
+    .preview-vazio {
+        padding: 48px 16px;
+        font-size: 14px;
     }
 
     .btn-finalizar,
     .btn-enviar-whatsapp {
         padding: 14px;
         font-size: 14px;
-        border-radius: 16px;
     }
 }
 
-/* ==================================================
-   MOBILE MUITO PEQUENO
-================================================== */
-@media (max-width: 360px) {
-    .navbar-menu {
-        gap: 6px;
+/* ================= MOBILE GRANDE */
+@media (max-width: 768px) {
+    .containerhome.pedido {
+        padding: 32px 20px 60px;
     }
 
-    .navbar-menu a {
+    .pedido-layout {
+        gap: 20px;
+    }
+
+    .pedido-orcamento {
+        padding: 24px;
+        border-radius: 18px;
+    }
+
+    .pedido-orcamento h2 {
+        font-size: 16px;
+    }
+
+    .dados-cliente input {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .btn-finalizar,
+    .btn-enviar-whatsapp {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .preview-vazio {
+        padding: 36px 12px;
+        font-size: 13px;
+    }
+
+    #resumo-itens {
+        gap: 12px;
+    }
+
+    .orcamento-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .orcamento-info {
+        gap: 2px;
+    }
+}
+
+/* ================= MOBILE PADRÃO */
+@media (max-width: 520px) {
+    .containerhome.pedido {
+        padding: 24px 16px 48px;
+    }
+
+    .pedido-orcamento {
+        padding: 20px;
+    }
+
+    .pedido-orcamento h2 {
+        font-size: 15px;
+    }
+
+    .dados-cliente input {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .btn-finalizar,
+    .btn-enviar-whatsapp {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .preview-vazio {
+        padding: 28px 12px;
+        font-size: 12px;
+    }
+}
+
+/* ================= MOBILE MUITO PEQUENO */
+@media (max-width: 360px) {
+    .containerhome.pedido {
+        padding: 16px 12px 32px;
+    }
+
+    .pedido-orcamento {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .pedido-orcamento h2 {
+        font-size: 14px;
+    }
+
+    .dados-cliente input {
+        padding: 8px;
         font-size: 11px;
     }
 
-    .containerhome.pedido h1 {
-        font-size: 20px;
+    .btn-finalizar,
+    .btn-enviar-whatsapp {
+        padding: 10px;
+        font-size: 12px;
     }
 
-    .btn-finalizar {
-        font-size: 13px;
-    }
-}
-
-/* ==================================================
-   MELHOR EXPERIÊNCIA TOUCH
-================================================== */
-@media (hover: none) {
-    .navbar-menu a::after {
-        display: none;
+    .preview-vazio {
+        padding: 24px 10px;
+        font-size: 11px;
     }
 
-    .orcamento-item:hover {
-        transform: none;
-        box-shadow: none;
+    #resumo-itens {
+        gap: 10px;
+    }
+
+    .orcamento-item {
+        flex-direction: column;
+        gap: 8px;
     }
 }
