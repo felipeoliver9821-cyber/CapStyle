@@ -83,8 +83,10 @@ function renderizarProdutos() {
         info.innerHTML = `
             <span class="badge-categoria">${produto.categoria}</span>
             <h3>${produto.nome}</h3>
+            <span class="preco-produto">R$ ${produto.valor.toFixed(2)}</span> <!-- NOVO -->
             <span class="minimo-info">Mínimo de 10 unidades por pedido</span>
         `;
+
 
         /* ===== SELECT COR (MANTIDO) ===== */
         const selectCor = document.createElement("select");
@@ -127,7 +129,8 @@ function renderizarProdutos() {
                 produto: produto.nome,
                 categoria: produto.categoria,
                 cor: corSelecionada.cor,
-                quantidade: qtd
+                quantidade: qtd,
+                valor: produto.valor  // NOVO
             };
 
             localStorage.setItem(

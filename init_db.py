@@ -7,7 +7,8 @@ cur.execute("""
 CREATE TABLE IF NOT EXISTS produtos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
-    categoria TEXT NOT NULL
+    categoria TEXT NOT NULL,
+    valor REAL NOT NULL DEFAULT 0.0  -- novo campo
 )
 """)
 

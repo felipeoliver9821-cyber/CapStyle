@@ -59,6 +59,7 @@ class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
+    valor = db.Column(db.Float, nullable=False, default=0.0)  # NOVO CAMPO
     cores = db.relationship(
         "ProdutoCor",
         backref="produto",
@@ -94,9 +95,11 @@ def carregar_produtos():
             "id": produto.id,
             "nome": produto.nome,
             "categoria": produto.categoria,
+            "valor": produto.valor,  # ADICIONADO
             "cores": [{"cor": c.cor, "imagem": c.imagem} for c in produto.cores]
         })
     return produtos
+
 
 def gerar_id_orcamento():
     while True:
@@ -138,27 +141,37 @@ def gerar_imagem_orcamento(
 
     cor = (0, 51, 102)
 
+    # Data e código
     data_atual = datetime.datetime.now().strftime("%d/%m/%Y")
-    draw.text((820, 514), data_atual, fill=cor, font=fonte_regular)
+    draw.text((800, 400), data_atual, fill=cor, font=fonte_regular)
+    draw.text((163, 358), f"Código: {id_pedido}", fill=cor, font=fonte_codigo)
 
-    draw.text((200, 514), f"Código: {id_pedido}", fill=cor, font=fonte_codigo)
+    # Dados do cliente
+    draw.text((238, 493), cliente,  fill=cor, font=fonte_regular)
+    draw.text((252, 550), endereco, fill=cor, font=fonte_regular)
+    draw.text((235, 610), cidade,   fill=cor, font=fonte_regular)
+    draw.text((252, 667), telefone, fill=cor, font=fonte_regular)
 
-    draw.text((170, 610), cliente,  fill=cor, font=fonte_regular)
-    draw.text((182, 647), endereco, fill=cor, font=fonte_regular)
-    draw.text((160, 688), cidade,   fill=cor, font=fonte_regular)
-    draw.text((180, 725), telefone, fill=cor, font=fonte_regular)
-
-    y_inicial = 895
+    # Itens
+    y_inicial = 855
     altura_linha = 36
 
     for index, item in enumerate(itens):
         y = y_inicial + index * altura_linha
         draw.text((180, y), str(item.get("produto", "")), fill=cor, font=fonte_pequena)
-        draw.text((700, y), str(item.get("quantidade", "")), fill=cor, font=fonte_pequena)
-        draw.text((880, y), str(item.get("cor", "")), fill=cor, font=fonte_pequena)
+        draw.text((471, y), str(item.get("quantidade", "")), fill=cor, font=fonte_pequena)
+        draw.text((650, y), str(item.get("cor", "")), fill=cor, font=fonte_pequena)
+        # Mostra o subtotal de cada item
+        draw.text((821, y), f"R$ {item.get('subtotal', 0):.2f}", fill=cor, font=fonte_pequena)
 
+    # ---------------- TOTAL FINAL ----------------
+    total_final = sum(item.get("subtotal", 0) for item in itens)
+    draw.text((807, 1400), f"R$ {total_final:.2f}", fill=cor, font=fonte_codigo)
+
+    # Salva imagem final
     imagem.save(caminho_saida)
     return caminho_saida
+
 
 # ================= CLOUDINARY WRAPPER =================
 def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens):
@@ -174,7 +187,7 @@ def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens):
         cidade=cidade,
         telefone=telefone,
         itens=itens,
-        caminho_saida=caminho_local
+        caminho_saida=caminho_local,
     )
 
     upload = cloudinary.uploader.upload(
@@ -274,13 +287,16 @@ def admin_add_produto():
 
     nome = request.form.get("nome")
     categoria = request.form.get("categoria")
+    valor = request.form.get("valor", "0").replace(",", ".")  # permite vírgula
+    try:
+        valor = float(valor)
+    except:
+        valor = 0.0
 
-    if not nome or not categoria:
-        abort(400, "Dados obrigatórios")
-
-    produto = Produto(nome=nome, categoria=categoria)
+    produto = Produto(nome=nome, categoria=categoria, valor=valor)
     db.session.add(produto)
     db.session.commit()
+
 
     for key in request.form:
         if key.startswith("cor_"):
@@ -320,6 +336,12 @@ def admin_update_produto(id):
 
     produto.nome = request.form.get("nome")
     produto.categoria = request.form.get("categoria")
+    valor = request.form.get("valor", "0").replace(",", ".")
+    try:
+        produto.valor = float(valor)
+    except:
+        produto.valor = 0.0
+
 
     cores_removidas = request.form.get("cores_removidas")
     if cores_removidas:

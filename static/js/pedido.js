@@ -37,23 +37,33 @@ function adicionarItem(produto) {
         return;
     }
 
+    // Verifica se o item já existe no pedido (mesmo produto e cor)
     const existente = itensPedido.find(i => i.produto === produto.nome && i.cor === cor);
 
     if (existente) {
+        // Se existir, soma a quantidade e atualiza o subtotal
         existente.quantidade += qtd;
+        existente.subtotal = existente.quantidade * produto.valor;
     } else {
+        // Se não existir, adiciona novo item com valor e subtotal
         itensPedido.push({
             produto: produto.nome,
             categoria: produto.categoria,
             cor,
-            quantidade: qtd
+            quantidade: qtd,
+            valor: produto.valor,           // VALOR UNITÁRIO
+            subtotal: qtd * produto.valor   // SUBTOTAL
         });
     }
 
+    // Reseta a quantidade temporária
     quantidadesTemp[produto.nome] = 0;
+
+    // Atualiza resumo e renderização
     atualizarResumoPedido();
     renderizarProdutosPedido();
 }
+
 
 // ================= ATUALIZA RESUMO DE ITENS =================
 function atualizarResumoPedido() {
@@ -72,6 +82,7 @@ function atualizarResumoPedido() {
         return;
     }
 
+    // Lista os itens do orçamento
     itensPedido.forEach((item, i) => {
         const li = document.createElement("li");
         li.className = "orcamento-item";
@@ -80,12 +91,24 @@ function atualizarResumoPedido() {
                 <strong>${item.produto}</strong>
                 <span>Cor: ${item.cor}</span>
                 <span>Quantidade: ${item.quantidade}</span>
+                <span>Valor unitário: R$ ${item.valor.toFixed(2)}</span>
+                <span>Subtotal: R$ ${item.subtotal.toFixed(2)}</span>
             </div>
             <button class="btn-remover" onclick="removerItem(${i})">✕</button>
         `;
         lista.appendChild(li);
     });
+
+    // Calcula total geral
+    const totalGeral = itensPedido.reduce((acc, item) => acc + item.subtotal, 0);
+
+    // Adiciona total ao final
+    const totalLi = document.createElement("li");
+    totalLi.className = "orcamento-total";
+    totalLi.innerHTML = `<strong>Total do orçamento: R$ ${totalGeral.toFixed(2)}</strong>`;
+    lista.appendChild(totalLi);
 }
+
 
 // ================= REMOVER ITEM =================
 function removerItem(index) {
@@ -141,8 +164,10 @@ function renderizarProdutosPedido() {
         info.className = "info-produto";
         info.innerHTML = `
             <h3>${produto.nome}</h3>
+            <span class="preco-produto">R$ ${produto.valor.toFixed(2)}</span>
             <span class="minimo-info">Mínimo de 10 unidades</span>
         `;
+
 
         const selectCor = document.createElement("select");
         selectCor.className = "select-cor";

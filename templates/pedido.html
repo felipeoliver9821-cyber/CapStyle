@@ -25,11 +25,11 @@
         <div class="menu-toggle" id="menuToggle">☰</div>
 
         <nav class="navbar-menu" id="navbarMenu">
-            <a href="/" class="active">Início</a>
+            <a href="/">Início</a>
             <span class="separator">|</span>
             <a href="/#catalogo">Catálogo</a>
             <span class="separator">|</span>
-            <a href="/pedido">Orçamento</a>
+            <a href="/pedido" class="active">Orçamento</a>
             <span class="separator">|</span>
             <a href="/#como-funciona">Como funciona</a>
             <span class="separator">|</span>
@@ -108,9 +108,8 @@
 <script id="produtos-data" type="application/json">
 {{ produtos | tojson }}
 </script>
-
-<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 <script src="{{ url_for('static', filename='js/pedido.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 
 </body>
 </html>
