@@ -132,11 +132,13 @@ def gerar_imagem_orcamento(
     imagem = Image.open(caminho_layout).convert("RGBA")
     draw = ImageDraw.Draw(imagem)
 
+    # ================= FONTES =================
     try:
-        fonte_regular = ImageFont.truetype("arial.ttf", 30)
-        fonte_pequena = ImageFont.truetype("arial.ttf", 26)
-        fonte_codigo  = ImageFont.truetype("arial.ttf", 28)
-    except:
+        fonte_regular = ImageFont.truetype(os.path.join(basedir, "static/fonts/Inter-Regular.ttf"), 30)
+        fonte_pequena  = ImageFont.truetype(os.path.join(basedir, "static/fonts/Inter-Medium.ttf"), 26)
+        fonte_codigo   = ImageFont.truetype(os.path.join(basedir, "static/fonts/Montserrat-Bold.ttf"), 28)
+    except Exception as e:
+        print("Não foi possível carregar fontes customizadas, usando padrão:", e)
         fonte_regular = fonte_pequena = fonte_codigo = ImageFont.load_default()
 
     cor = (0, 51, 102)
@@ -161,7 +163,6 @@ def gerar_imagem_orcamento(
         draw.text((180, y), str(item.get("produto", "")), fill=cor, font=fonte_pequena)
         draw.text((471, y), str(item.get("quantidade", "")), fill=cor, font=fonte_pequena)
         draw.text((650, y), str(item.get("cor", "")), fill=cor, font=fonte_pequena)
-        # Mostra o subtotal de cada item
         draw.text((821, y), f"R$ {item.get('subtotal', 0):.2f}", fill=cor, font=fonte_pequena)
 
     # ---------------- TOTAL FINAL ----------------
