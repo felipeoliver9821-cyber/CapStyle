@@ -294,16 +294,54 @@ function enviarWhatsApp(id, urlImagem) {
 
 // ================= INIT =================
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector(".btn-cat")?.classList.add("ativa");
+    // Marca a primeira categoria como ativa
+    const primeiraCat = document.querySelectorAll(".btn-cat")[0];
+    if (primeiraCat) primeiraCat.classList.add("ativa");
+
+    // Renderiza os produtos da categoria atual
     renderizarProdutosPedido();
 
-    // >>> ADIÇÃO: ITEM VINDO DA HOME <<<
+    // ===== ADIÇÃO: ITEM VINDO DA HOME =====
     const itemSalvo = localStorage.getItem("orcamento_inicial");
     if (itemSalvo) {
-        itensPedido.push(JSON.parse(itemSalvo));
+        try {
+            const item = JSON.parse(itemSalvo);
+            if (item.produto && item.quantidade) {
+                itensPedido.push(item);
+            }
+        } catch (err) {
+            console.warn("Erro ao ler item salvo:", err);
+        }
         localStorage.removeItem("orcamento_inicial");
     }
-    // <<< FIM DA ADIÇÃO <<<
+    // ===== FIM DA ADIÇÃO =====
 
+    // Atualiza o resumo do pedido
     atualizarResumoPedido();
+
+    // ===== MENU HAMBÚRGUER =====
+    const menuToggle = document.getElementById('menuToggle');
+    const navbarMenu = document.getElementById('navbarMenu');
+
+    if (menuToggle && navbarMenu) {
+        menuToggle.addEventListener('click', e => {
+            e.stopPropagation();
+            navbarMenu.classList.toggle('active');
+            menuToggle.classList.toggle('open');
+            menuToggle.textContent = menuToggle.classList.contains('open') ? '❌' : '☰';
+        });
+
+        document.addEventListener('click', e => {
+            if (
+                navbarMenu.classList.contains('active') &&
+                !navbarMenu.contains(e.target) &&
+                !menuToggle.contains(e.target)
+            ) {
+                navbarMenu.classList.remove('active');
+                menuToggle.classList.remove('open');
+                menuToggle.textContent = '☰';
+            }
+        });
+    }
 });
+
