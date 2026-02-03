@@ -284,6 +284,8 @@ window.enviarPedido = async function () {
     }
 };
 
+//teste!
+
 // ================= ENVIAR WHATSAPP =================
 function enviarWhatsApp(id, urlImagem) {
     const numero = "556294536745";
