@@ -60,6 +60,7 @@ function adicionarItem(produto) {
             valor: valor,
             subtotal: subtotal
         });
+    }
 
 
     // Reseta a quantidade temporária
