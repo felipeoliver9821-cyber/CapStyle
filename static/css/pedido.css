@@ -264,6 +264,13 @@ html {
         font-size: 20px;
     }
 
+    .pedido-orcamento h3 {
+        font-size: 14px;
+        opacity: 0.5;
+        text-align: center;
+        justify-content: center;
+    }
+
     .dados-cliente input {
         padding: 16px;
         font-size: 16px;

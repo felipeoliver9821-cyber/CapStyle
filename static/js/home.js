@@ -85,6 +85,7 @@ function renderizarProdutos() {
             <h3>${produto.nome}</h3>
             <span class="preco-produto">R$ ${produto.valor.toFixed(2)}</span> <!-- NOVO -->
             <span class="minimo-info">Mínimo de 10 unidades por pedido</span>
+            <span class="minimo-info">💰 Desconto por quantidade</span>
         `;
 
 
@@ -122,6 +123,9 @@ function renderizarProdutos() {
         btn.textContent = "Solicitar orçamento";
         btn.disabled = qtd < 10;
 
+        /* ===== AVISO DE VALOR ===== */ 
+        const avisoValor = document.createElement("span"); avisoValor.className = "aviso-valor"; avisoValor.textContent = "Valores exibidos são base inicial.";
+
         btn.onclick = () => {
             const corSelecionada = produto.cores[imagemIndex[produto.nome]];
 
@@ -142,7 +146,7 @@ function renderizarProdutos() {
         };
 
         /* ===== ADIÇÕES AO DOM (ESTAVA FALTANDO) ===== */
-        info.append(selectCor, controles, btn);
+        info.append(selectCor, controles, btn, avisoValor);
         li.append(imagensWrap, info);
         lista.appendChild(li);
     });

@@ -175,6 +175,7 @@ function renderizarProdutosPedido() {
             <h3>${produto.nome}</h3>
             <span class="preco-produto">R$ ${produto.valor.toFixed(2)}</span>
             <span class="minimo-info">Mínimo de 10 unidades</span>
+            <span class="minimo-info">💰 Desconto por quantidade</span>
         `;
 
 
@@ -210,7 +211,10 @@ function renderizarProdutosPedido() {
         btnAdd.disabled = qtd < 10;
         btnAdd.onclick = () => adicionarItem(produto);
 
-        info.append(selectCor, controles, btnAdd);
+        /* ===== AVISO DE VALOR ===== */ 
+        const avisoValor = document.createElement("span"); avisoValor.className = "aviso-valor"; avisoValor.textContent = "Valores exibidos são base inicial.";
+
+        info.append(selectCor, controles, btnAdd, avisoValor);
         li.append(imagensWrap, info);
         lista.appendChild(li);
     });
@@ -282,8 +286,8 @@ window.enviarPedido = async function () {
 
 // ================= ENVIAR WHATSAPP =================
 function enviarWhatsApp(id, urlImagem) {
-    const numero = "5512991306213";
-    const mensagem = `Orçamento ${id} gerado: ${urlImagem}`;
+    const numero = "556294536745";
+    const mensagem = "Olá! Segue o seu Orçamento (${id}). Você pode visualizar os detalhes no link abaixo: ${urlImagem}";
     window.open(
         `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`,
         "_blank"
