@@ -289,7 +289,7 @@ function enviarWhatsApp(id, urlImagem) {
     const numero = "556294536745";
     
     // CORREÇÃO: Trocado " por ` (crase) para as variáveis funcionarem
-    const mensagem = `Olá! Segue o seu *Orçamento ${id}*. 📄\n\nVocê pode visualizar os detalhes no link abaixo:\n${urlImagem}`;
+    const mensagem = `Olá! Segue o seu *Orçamento ${id}*. 📄\n\nVocê pode visualizar os detalhes no link abaixo:  \n${urlImagem}`;
 
     window.open(
         `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`,
