@@ -251,8 +251,8 @@ def admin_login():
         senha = request.form.get("senha")
 
         # Usuário e senha do admin
-        admin_user = os.getenv("ADMIN_USER", "capstyle")
-        admin_pass = os.getenv("ADMIN_PASS", "a1B2C3D4E5F612#")
+        admin_user = os.getenv("ADMIN_USER")
+        admin_pass = os.getenv("ADMIN_PASS")
 
         if usuario == admin_user and senha == admin_pass:
             session["admin_logado"] = True
