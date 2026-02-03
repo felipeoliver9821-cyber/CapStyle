@@ -25,6 +25,9 @@ function alterarQtdTemp(nome, delta) {
 
 // ================= ADICIONAR ITEM AO ORÇAMENTO =================
 function adicionarItem(produto) {
+    console.log("quantidadesTemp:", quantidadesTemp);
+    console.log("produto.nome:", produto.nome);
+
     const qtd = quantidadesTemp[produto.nome] || 0;
     const cor = coresSelecionadas[produto.nome];
 
@@ -46,15 +49,18 @@ function adicionarItem(produto) {
         existente.subtotal = existente.quantidade * produto.valor;
     } else {
         // Se não existir, adiciona novo item com valor e subtotal
+        const valor = parseFloat(produto.valor) || 0;
+        const subtotal = qtd * valor;
+
         itensPedido.push({
             produto: produto.nome,
             categoria: produto.categoria,
             cor,
             quantidade: qtd,
-            valor: produto.valor,           // VALOR UNITÁRIO
-            subtotal: qtd * produto.valor   // SUBTOTAL
+            valor: valor,
+            subtotal: subtotal
         });
-    }
+
 
     // Reseta a quantidade temporária
     quantidadesTemp[produto.nome] = 0;
@@ -84,6 +90,7 @@ function atualizarResumoPedido() {
 
     // Lista os itens do orçamento
     itensPedido.forEach((item, i) => {
+        console.log("Item no resumo:", item);
         const li = document.createElement("li");
         li.className = "orcamento-item";
         li.innerHTML = `
@@ -91,8 +98,9 @@ function atualizarResumoPedido() {
                 <strong>${item.produto}</strong>
                 <span>Cor: ${item.cor}</span>
                 <span>Quantidade: ${item.quantidade}</span>
-                <span>Valor unitário: R$ ${item.valor.toFixed(2)}</span>
-                <span>Subtotal: R$ ${item.subtotal.toFixed(2)}</span>
+                <span>Valor unitário: R$ ${(item.valor ?? 0).toFixed(2)}</span>
+                <span>Subtotal: R$ ${(item.subtotal ?? 0).toFixed(2)}</span>
+
             </div>
             <button class="btn-remover" onclick="removerItem(${i})">✕</button>
         `;
