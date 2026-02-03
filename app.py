@@ -175,10 +175,7 @@ def gerar_imagem_orcamento(
 
 
 # ================= CLOUDINARY WRAPPER =================
-def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens):
-    cidade = ""
-    telefone = ""
-
+def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens, cidade="", telefone=""):
     caminho_local = os.path.join(TEMP_FOLDER, f"{id_pedido}.png")
 
     gerar_imagem_orcamento(
@@ -200,6 +197,7 @@ def gerar_imagem_orcamento_cloudinary(id_pedido, cliente, endereco, itens):
 
     return upload["secure_url"]
 
+
 # ================= ROTAS =================
 @app.route("/")
 def home():
@@ -215,13 +213,22 @@ def gerar_pedido():
 
     cliente = dados.get("cliente", "").strip()
     endereco = dados.get("endereco", "").strip()
+    cidade = dados.get("cidade", "").strip()
+    telefone = dados.get("telefone", "").strip()
     itens = dados.get("itens", [])
 
     if not cliente or not endereco or not itens:
         return jsonify({"erro": "Dados incompletos"}), 400
 
     id_orcamento = gerar_id_orcamento()
-    link = gerar_imagem_orcamento_cloudinary(id_orcamento, cliente, endereco, itens)
+    link = gerar_imagem_orcamento_cloudinary(
+        id_orcamento,
+        cliente,
+        endereco,
+        itens,
+        cidade=cidade,
+        telefone=telefone
+    )
 
     novo = Orcamento(
         id=id_orcamento,
@@ -233,6 +240,7 @@ def gerar_pedido():
     db.session.commit()
 
     return jsonify({"status": "ok", "id": id_orcamento, "link": link})
+
 
 @app.route("/pedido/enviar/<id_orcamento>", methods=["POST"])
 def enviar_orcamento(id_orcamento):
