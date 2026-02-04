@@ -81,10 +81,6 @@ class Orcamento(db.Model):
     arquivo_imagem = db.Column(db.String(500), nullable=False)
     criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-# ================= CRIA BANCO =================
-with app.app_context():
-    db.create_all()
-
 # ================= FUNÇÕES AUXILIARES =================
 def carregar_produtos():
     produtos = {}
@@ -412,5 +408,8 @@ def admin_delete_produto(id):
 
 # ================= MAIN =================
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+
     port = int(os.environ.get("PORT", 8080))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
