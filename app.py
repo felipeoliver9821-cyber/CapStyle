@@ -12,38 +12,50 @@ import io
 import cloudinary
 import cloudinary.uploader
 
+
 # ================= ENV =================
-load_dotenv()
+if os.getenv("FLASK_ENV") != "production":
+    load_dotenv()
+
 
 # ================= CONFIG =================
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+app.config["UPLOAD_FOLDER"] = os.path.join(basedir, "static/uploads")
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 TEMP_FOLDER = os.path.join(basedir, "temp")
 os.makedirs(TEMP_FOLDER, exist_ok=True)
 
-# ---------- BANCO DE DADOS (POSTGRESQL RAILWAY / LOCAL) ----------
-DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL:
-    # Corrige postgres:// → postgresql:// (Railway)
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL.replace(
-        "postgres://", "postgresql://"
-    )
-else:
-    # Fallback local
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///capstyle.db"
+# ================= DATABASE (SUPABASE POOLER) =================
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL não configurada")
+
+# garante compatibilidade do prefixo
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL.replace(
+    "postgres://", "postgresql://"
+)
+
+# ⚠️ IMPORTANTE: Supabase já usa PgBouncer
+# NÃO usar pool do SQLAlchemy
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "poolclass": None
+}
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# ====== SESSÃO ======
+
+# ================= SESSÃO =================
 app.secret_key = os.getenv("SECRET_KEY", "uma_chave_qualquer_aqui")
 
+
+# ================= DB INIT =================
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
 
 # ================= CLOUDINARY =================
 cloudinary.config(
@@ -53,25 +65,32 @@ cloudinary.config(
     secure=True
 )
 
+
 # ================= MODELS =================
 class Produto(db.Model):
     __tablename__ = "produtos"
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
-    valor = db.Column(db.Float, nullable=False, default=0.0)  # NOVO CAMPO
+    valor = db.Column(db.Float, nullable=False, default=0.0)
     cores = db.relationship(
         "ProdutoCor",
         backref="produto",
         cascade="all, delete-orphan"
     )
 
+
 class ProdutoCor(db.Model):
     __tablename__ = "produto_cores"
     id = db.Column(db.Integer, primary_key=True)
-    produto_id = db.Column(db.Integer, db.ForeignKey("produtos.id"), nullable=False)
+    produto_id = db.Column(
+        db.Integer,
+        db.ForeignKey("produtos.id"),
+        nullable=False
+    )
     cor = db.Column(db.String(50), nullable=False)
     imagem = db.Column(db.String(200), nullable=False)
+
 
 class Orcamento(db.Model):
     __tablename__ = "orcamentos"
@@ -79,7 +98,11 @@ class Orcamento(db.Model):
     cliente = db.Column(db.String(100), nullable=False)
     endereco = db.Column(db.String(200), nullable=False)
     arquivo_imagem = db.Column(db.String(500), nullable=False)
-    criado_em = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    criado_em = db.Column(
+        db.DateTime,
+        default=datetime.datetime.utcnow
+    )
+
 
 # ================= FUNÇÕES AUXILIARES =================
 def carregar_produtos():
