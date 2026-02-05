@@ -359,6 +359,7 @@ def admin_update_produto(id):
 
     produto = Produto.query.get_or_404(id)
 
+    # Atualiza dados básicos do produto
     produto.nome = request.form.get("nome")
     produto.categoria = request.form.get("categoria")
     valor = request.form.get("valor", "0").replace(",", ".")
@@ -367,7 +368,7 @@ def admin_update_produto(id):
     except:
         produto.valor = 0.0
 
-
+    # Remove cores marcadas para exclusão
     cores_removidas = request.form.get("cores_removidas")
     if cores_removidas:
         ids = json.loads(cores_removidas)
@@ -379,8 +380,8 @@ def admin_update_produto(id):
                     os.remove(caminho)
                 db.session.delete(cor)
 
+    # Atualiza ou adiciona novas cores
     cores = json.loads(request.form.get("cores", "[]"))
-
     for index, c in enumerate(cores):
         cor_nome = c.get("cor")
         cor_id = c.get("id")
@@ -388,11 +389,12 @@ def admin_update_produto(id):
 
         if cor_id:
             cor_obj = ProdutoCor.query.get(cor_id)
-            cor_obj.cor = cor_nome
-            if imagem_file:
-                filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
-                imagem_file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-                cor_obj.imagem = filename
+            if cor_obj:
+                cor_obj.cor = cor_nome
+                if imagem_file:
+                    filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
+                    imagem_file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                    cor_obj.imagem = filename
         else:
             if imagem_file:
                 filename = f"{uuid.uuid4().hex}_{secure_filename(imagem_file.filename)}"
@@ -404,6 +406,15 @@ def admin_update_produto(id):
                         imagem=filename
                     )
                 )
+
+    # Salva todas alterações
+    db.session.commit()
+
+    # Mensagem de sucesso e redireciona para a lista de produtos
+    flash("Produto atualizado com sucesso!", "success")
+    return redirect(url_for("admin"))
+
+
 @app.route("/admin/delete/<int:id>")
 def admin_delete_produto(id):
     if not session.get("admin_logado"):
