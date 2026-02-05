@@ -22,6 +22,8 @@ if os.getenv("FLASK_ENV") != "production":
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY")
+
 app.config["UPLOAD_FOLDER"] = os.path.join(basedir, "static/uploads")
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
