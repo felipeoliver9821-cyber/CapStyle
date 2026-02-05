@@ -162,7 +162,7 @@ def gerar_imagem_orcamento(
     # Data e código
     data_atual = datetime.datetime.now().strftime("%d/%m/%Y")
     draw.text((800, 400), data_atual, fill=cor, font=fonte_regular)
-    draw.text((163, 358), f"Código: {id_pedido}", fill=cor, font=fonte_codigo)
+    draw.text((156, 358), f"{id_pedido}", fill=cor, font=fonte_codigo)
 
     # Dados do cliente
     draw.text((238, 493), cliente,  fill=cor, font=fonte_regular)
@@ -176,14 +176,14 @@ def gerar_imagem_orcamento(
 
     for index, item in enumerate(itens):
         y = y_inicial + index * altura_linha
-        draw.text((180, y), str(item.get("produto", "")), fill=cor, font=fonte_pequena)
-        draw.text((471, y), str(item.get("quantidade", "")), fill=cor, font=fonte_pequena)
-        draw.text((650, y), str(item.get("cor", "")), fill=cor, font=fonte_pequena)
-        draw.text((821, y), f"R$ {item.get('subtotal', 0):.2f}", fill=cor, font=fonte_pequena)
+        draw.text((100, y), str(item.get("produto", "")), fill=cor, font=fonte_pequena)
+        draw.text((485, y), str(item.get("quantidade", "")), fill=cor, font=fonte_pequena)
+        draw.text((585, y), str(item.get("cor", "")), fill=cor, font=fonte_pequena)
+        draw.text((818, y), f"R$ {item.get('subtotal', 0):.2f}", fill=cor, font=fonte_pequena)
 
     # ---------------- TOTAL FINAL ----------------
     total_final = sum(item.get("subtotal", 0) for item in itens)
-    draw.text((807, 1400), f"R$ {total_final:.2f}", fill=cor, font=fonte_codigo)
+    draw.text((802, 1400), f"R$ {total_final:.2f}", fill=cor, font=fonte_codigo)
 
     # Salva imagem final
     imagem.save(caminho_saida)
