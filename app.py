@@ -29,33 +29,28 @@ TEMP_FOLDER = os.path.join(basedir, "temp")
 os.makedirs(TEMP_FOLDER, exist_ok=True)
 
 
-# ================= DATABASE (SUPABASE POOLER) =================
+# ================= DATABASE (SUPABASE) =================
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL não configurada")
 
-# garante compatibilidade do prefixo
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL.replace(
-    "postgres://", "postgresql://"
-)
+# força psycopg2 + corrige postgres://
+DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://")
 
-# ⚠️ IMPORTANTE: Supabase já usa PgBouncer
-# NÃO usar pool do SQLAlchemy
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+
+# OBRIGATÓRIO PARA SUPABASE POOLER
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "poolclass": None
+    "poolclass": __import__("sqlalchemy.pool").pool.NullPool,
+    "pool_pre_ping": True,
 }
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
-# ================= SESSÃO =================
-app.secret_key = os.getenv("SECRET_KEY", "uma_chave_qualquer_aqui")
-
-
 # ================= DB INIT =================
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
 
 # ================= CLOUDINARY =================
 cloudinary.config(
@@ -431,8 +426,8 @@ def admin_delete_produto(id):
 
 # ================= MAIN =================
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
     port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    debug = os.getenv("FLASK_ENV") != "production"
+
+    app.run(host="0.0.0.0", port=port, debug=debug)
+
