@@ -27,27 +27,52 @@ body {
 }
 
 /* ==================================================
-   NAVBAR
+   NAVBAR – CAPSTYLE (LOGO ACIMA DOS LINKS)
 ================================================== */
+
 .navbar {
     position: sticky;
     top: 0;
     z-index: 1000;
     width: 100%;
+
     background: rgba(10, 19, 36, 0.82);
     backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
     border-bottom: 1px solid rgba(255,255,255,0.06);
     box-shadow: 0 12px 40px rgba(0,0,0,.45);
 }
+
+/* ===============================
+   CONTAINER
+================================ */
 
 .navbar-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 16px 32px 14px;
-    display: flex;
-    flex-direction: column;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        "logo cta"
+        "menu menu";
+
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+}
+
+
+/* ===============================
+   LOGO
+================================ */
+
+.navbar-logo {
+    grid-area: logo;
+    display: flex;
+    justify-content: center;
 }
 
 .navbar-logo img {
@@ -55,13 +80,18 @@ body {
     height: 57px;
     display: block;
     object-fit: cover;
-    object-position: center;
 }
 
+/* ===============================
+   MENU (ABAIXO DA LOGO)
+================================ */
+
 .navbar-menu {
+    grid-area: menu;
     display: flex;
     align-items: center;
     gap: 14px;
+    justify-content: center;
 }
 
 .navbar-menu a {
@@ -99,6 +129,38 @@ body {
 .navbar-menu a.active::after {
     width: 100%;
 }
+
+/* ===============================
+   BOTÃO CTA (CANTO DIREITO)
+================================ */
+
+.navbar-cta {
+    grid-area: cta;
+}
+
+
+.btn-header {
+    background: linear-gradient(150deg, #1E6FD9, #BFC6CE);
+    color: #0A1324;
+
+    padding: 12px 22px;
+    border-radius: 14px;
+    border: none;
+
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+
+    box-shadow: 0 2px 28px rgba(49, 245, 252, 0.35);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.btn-header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(242,201,76,0.45);
+}
+
 
 /* =========================
    BOTÃO HAMBURGUER
@@ -260,7 +322,8 @@ body {
    CATÁLOGO
 ================================================== */
 
-#catalogo h1, h2{
+#catalogo h1,
+#catalogo h2 {
     display: flex;
     text-align: center;
     justify-content: center;
@@ -674,6 +737,7 @@ footer {
    RESPONSIVO
 ================================================== */
 @media (max-width: 768px){
+
 
     .navbar-container {
         flex-direction: row;

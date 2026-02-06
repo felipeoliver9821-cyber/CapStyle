@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CapStyle | Bonés Personalizados</title>
 
+    <title>CapStyle | Bonés Personalizados</title>
     <meta name="description" content="Bonés personalizados sob medida. Qualidade premium, personalização completa e orçamento rápido.">
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/brand-insight.css') }}">
+    
+
     <link rel="icon" href="/static/images/favicon.png">
 </head>
 <body>
 
 <!-- ================= HEADER ================= -->
-
 <header class="navbar">
     <div class="navbar-container">
         <a href="/" class="navbar-logo">
             <img src="/static/images/logotipo_sfundo.png" alt="CapStyle">
         </a>
 
-        <!-- botão hamburguer -->
         <div class="menu-toggle" id="menuToggle">☰</div>
 
         <nav class="navbar-menu" id="navbarMenu">
@@ -34,10 +38,15 @@
             <a href="#como-funciona">Como funciona</a>
             <span class="separator">|</span>
             <a href="#contato">Contato</a>
+
+            <!-- CTA MOBILE -->
+            <div class="navbar-cta">
+                <button class="btn-header">Solicitar Análise</button>
+            </div>
+
         </nav>
     </div>
 </header>
-
 
 <!-- ================= HERO ================= -->
 <section id="hero" class="hero">
@@ -75,22 +84,6 @@
     </div>
 </section>
 
-<!-- ================= CATÁLOGO ================= -->
-<section id="catalogo" class="containerhome catalogo">
-    <h1>Catálogo</h1>
-    <h2>Escolha o modelo ideal e solicite seu orçamento</h2>
-
-    <div class="filtros">
-        {% for cat in produtos.keys() %}
-            <button class="btn-cat" onclick="filtrarCategoria('{{ cat }}')">
-                {{ cat }}
-            </button>
-        {% endfor %}
-    </div>
-
-    <ul id="lista-produtos"></ul>
-</section>
-
 <!-- ================= COMO FUNCIONA ================= -->
 <section id="como-funciona" class="como-funciona">
     <h2>Como Funciona</h2>
@@ -101,6 +94,121 @@
         <div class="passo"><span>3</span><p>Solicite o orçamento</p></div>
         <div class="passo"><span>4</span><p>Continue o Pedido com nossos atendentes</p></div>
     </div>
+</section>
+
+<!-- ================= CATÁLOGO ================= -->
+<section id="catalogo" class="containerhome catalogo">
+    <h1>Catálogo</h1>
+    <h2>Escolha o modelo ideal e solicite seu orçamento</h2>
+
+    <div class="filtros">
+        {% for cat in produtos.keys() %}
+        <button class="btn-cat" onclick="filtrarCategoria('{{ cat }}')">
+            {{ cat }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <ul id="lista-produtos"></ul>
+</section>
+
+<!-- ================= BRAND INSIGHT ================= -->
+<section id="brand-insight" class="brand-insight" aria-labelledby="brand-insight-title">
+  <div class="bi-container">
+
+    <div class="bi-header">
+      <span class="bi-tag">CapStyle Brand Insight™</span>
+      <h2 id="brand-insight-title">Análise estratégica aplicada à sua marca</h2>
+      <p>
+        Simulamos como decisões de produção impactam
+        a percepção, valor e autoridade da sua marca no mercado.
+      </p>
+    </div>
+
+    <div class="bi-inputs">
+
+      <div class="bi-input-group">
+        <label>Qual é o principal objetivo do seu boné?</label>
+        <div class="bi-options">
+          <button type="button" class="bi-option" data-objetivo="branding">Branding de marca</button>
+          <button type="button" class="bi-option" data-objetivo="uniforme">Uniforme / equipe</button>
+          <button type="button" class="bi-option" data-objetivo="evento">Evento / ação promocional</button>
+          <button type="button" class="bi-option" data-objetivo="revenda">Revenda / produto final</button>
+          <button type="button" class="bi-option" data-objetivo="corporativo">Presente corporativo</button>
+        </div>
+      </div>
+
+      <div class="bi-input-group">
+        <label>Nível de exigência da sua marca</label>
+        <div class="bi-slider-wrapper">
+          <input
+            type="range"
+            min="1"
+            max="4"
+            step="1"
+            value="2"
+            id="exigenciaRange"
+            aria-valuemin="1"
+            aria-valuemax="4"
+          >
+          <div class="bi-slider-labels">
+            <span>Essencial</span>
+            <span>Profissional</span>
+            <span>Alto padrão</span>
+            <span>Premium</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bi-processing" aria-live="polite">
+      <span class="bi-processing-text"></span>
+    </div>
+
+    <div class="bi-result">
+      <h3>Análise baseada no seu perfil</h3>
+
+      <p class="bi-context">
+        Com base no objetivo <strong id="resObjetivo">—</strong> e
+        no nível de exigência <strong id="resExigencia">—</strong>,
+        identificamos o seguinte cenário:
+      </p>
+
+      <div class="bi-metrics">
+        <div class="bi-metric">
+          <span class="label">Impacto visual</span>
+          <span class="value" id="impactoValor">—</span>
+        </div>
+
+        <div class="bi-metric">
+          <span class="label">Consistência de marca</span>
+          <span class="value" id="consistenciaValor">—</span>
+        </div>
+
+        <div class="bi-metric">
+          <span class="label">Risco de percepção negativa</span>
+          <span class="value" id="riscoValor">—</span>
+        </div>
+      </div>
+
+      <p class="bi-insight" id="biInsight">
+        Ajuste os parâmetros para visualizar o diagnóstico.
+      </p>
+
+      <!-- CTA CONTROLADO PELO JS -->
+      <button
+        type="button"
+        class="bi-cta"
+        id="biWhatsappBtn"
+        disabled
+        aria-disabled="true"
+      >
+        Continuar Análise no WhatsApp
+      </button>
+    </div>
+
+  </div>
 </section>
 
 <!-- ================= GALERIA ================= -->
@@ -208,25 +316,25 @@
     </div>
 </section>
 
+
 <!-- ================= CONTATO ================= -->
 <section id="contato" class="cta-final">
     <h2>Vamos criar seus bonés?</h2>
     <p>Fale com a gente e receba um orçamento rápido.</p>
-
     <a href="/pedido" class="btn-primary">Solicitar Orçamento</a>
 </section>
 
-<!-- ================= FOOTER ================= -->
 <footer>
     &copy; 2026 CapStyle — Todos os direitos reservados
 </footer>
 
-<!-- ================= DADOS ================= -->
+<!-- ================= DATA & SCRIPTS ================= -->
 <script id="produtos-data" type="application/json">
 {{ produtos | tojson }}
 </script>
 
-<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/brand-insight.js') }}" defer></script>
 
 </body>
 </html>
