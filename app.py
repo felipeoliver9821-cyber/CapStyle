@@ -312,11 +312,16 @@ def admin_add_produto():
 
     nome = request.form.get("nome")
     categoria = request.form.get("categoria")
-    valor = request.form.get("valor", "0").replace(",", ".")  # permite vírgula
+    valor_raw = request.form.get("valor")
+
+    if not valor_raw:
+            abort(400, "Valor não informado")
+    
     try:
-        valor = float(valor)
-    except:
-        valor = 0.0
+            valor = float(valor_raw.replace(",", "."))
+    except ValueError:
+            abort(400, "Valor inválido")
+
 
     produto = Produto(nome=nome, categoria=categoria, valor=valor)
     db.session.add(produto)

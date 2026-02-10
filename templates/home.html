@@ -84,34 +84,6 @@
     </div>
 </section>
 
-<!-- ================= COMO FUNCIONA ================= -->
-<section id="como-funciona" class="como-funciona">
-    <h2>Como Funciona</h2>
-
-    <div class="passos">
-        <div class="passo"><span>1</span><p>Escolha o modelo</p></div>
-        <div class="passo"><span>2</span><p>Adicione ao Orçamento</p></div>
-        <div class="passo"><span>3</span><p>Solicite o orçamento</p></div>
-        <div class="passo"><span>4</span><p>Continue o Pedido com nossos atendentes</p></div>
-    </div>
-</section>
-
-<!-- ================= CATÁLOGO ================= -->
-<section id="catalogo" class="containerhome catalogo">
-    <h1>Catálogo</h1>
-    <h2>Escolha o modelo ideal e solicite seu orçamento</h2>
-
-    <div class="filtros">
-        {% for cat in produtos.keys() %}
-        <button class="btn-cat" onclick="filtrarCategoria('{{ cat }}')">
-            {{ cat }}
-        </button>
-        {% endfor %}
-    </div>
-
-    <ul id="lista-produtos"></ul>
-</section>
-
 <!-- ================= BRAND INSIGHT ================= -->
 <section id="brand-insight" class="brand-insight" aria-labelledby="brand-insight-title">
   <div class="bi-container">
@@ -211,6 +183,33 @@
   </div>
 </section>
 
+
+<!-- ================= CATÁLOGO ================= -->
+<section id="catalogo" class="containerhome catalogo">
+    <h1>Catálogo</h1>
+    <h2>Escolha o modelo ideal e solicite seu orçamento</h2>
+
+
+    <section id="como-funciona" class="como-funciona">
+    <div class="passos">
+        <div class="passo"><span>1</span><p>Escolha o modelo</p></div>
+        <div class="passo"><span>2</span><p>Adicione ao Orçamento</p></div>
+        <div class="passo"><span>3</span><p>Solicite o orçamento</p></div>
+        <div class="passo"><span>4</span><p>Continue o Pedido com nossos atendentes</p></div>
+    </div>
+    </section>
+
+    <div class="filtros">
+        {% for cat in produtos.keys() %}
+        <button class="btn-cat" onclick="filtrarCategoria('{{ cat }}')">
+            {{ cat }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <ul id="lista-produtos"></ul>
+</section>
+
 <!-- ================= GALERIA ================= -->
 <section id="galeria" class="galeria">
     <h2>Trabalhos Realizados</h2>
@@ -228,55 +227,118 @@
 </section>
 
 <!-- ================= AVALIAÇÕES ================= -->
+<!-- ================= AVALIAÇÕES ================= -->
 <section id="avaliacoes" class="avaliacoes">
-    <h2>Clientes Satisfeitos</h2>
-
-    <div class="avaliacao">
-        <p>“Qualidade absurda, recomendo demais.”</p>
-        <span>★★★★★</span>
-        <span>Felipe A., startup</span>
+    <div class="avaliacoes-header">
+        <h2>Clientes que confiam na CapStyle</h2>
+        <p>Marcas, startups e lojistas que já elevaram o nível dos seus produtos.</p>
     </div>
 
-    <div class="avaliacao">
-        <p>“Produto profissional, ótimo custo-benefício.”</p>
-        <span>★★★★★</span>
-        <span>Camila T., e-commerce</span>
-    </div>
+    <div class="avaliacoes-grid">
 
-    <div class="avaliacao">
-        <p>“Atendimento ágil e resultado acima do esperado.”</p>
-        <span>★★★★★</span>
-        <span>João P.</span>
-    </div>
+        <div class="avaliacao">
+            <p>“Qualidade absurda, acabamento muito acima do que eu esperava.”</p>
+            <div class="avaliacao-footer">
+                <span class="stars">★★★★★</span>
+                <span class="autor">Felipe A. <small>Startup</small></span>
+            </div>
+        </div>
 
-    <div class="avaliacao">
-        <p>“Cores fiéis e bordado muito bem feito.”</p>
-        <span>★★★★★</span>
-        <span>Mariana R., agência de eventos</span>
-    </div>
+        <div class="avaliacao">
+            <p>“Produto profissional, ótimo custo-benefício e entrega rápida.”</p>
+            <div class="avaliacao-footer">
+                <span class="stars">★★★★★</span>
+                <span class="autor">Camila T. <small>E-commerce</small></span>
+            </div>
+        </div>
 
-    <div class="avaliacao">
-        <p>“Entrega rápida e personalização perfeita.”</p>
-        <span>★★★★★</span>
-        <span>Rafael S., lojista</span>
-    </div>
+        <div class="avaliacao">
+            <p>“Atendimento ágil e resultado acima do esperado.”</p>
+            <div class="avaliacao-footer">
+                <span class="stars">★★★★★</span>
+                <span class="autor">João P.</span>
+            </div>
+        </div>
 
-    <div class="avaliacao">
-        <p>“Qualidade excelente e acabamento impecável.”</p>
-        <span>★★★★★</span>
-        <span>Lucas M. marca de streetwear</span>
-    </div>
+        <div class="avaliacao">
+            <p>“Cores fiéis e bordado extremamente bem feito.”</p>
+            <div class="avaliacao-footer">
+                <span class="stars">★★★★★</span>
+                <span class="autor">Mariana R. <small>Eventos</small></span>
+            </div>
+        </div>
 
+        <div class="avaliacao">
+            <p>“Personalização perfeita e experiência impecável.”</p>
+            <div class="avaliacao-footer">
+                <span class="stars">★★★★★</span>
+                <span class="autor">Rafael S. <small>Lojista</small></span>
+            </div>
+        </div>
+
+        <div class="avaliacao">
+            <p>“Qualidade premium, acabamento impecável.”</p>
+            <div class="avaliacao-footer">
+                <span class="stars">★★★★★</span>
+                <span class="autor">Lucas M. <small>Streetwear</small></span>
+            </div>
+        </div>
+
+    </div>
 </section>
 
-<!-- ================= FAQ ================= -->
-<section id="faq" class="sobre">
-    <h2>Dúvidas Frequentes</h2>
 
-    <p><strong>Quantidade mínima?</strong><br>Depende do modelo.</p>
-    <p><strong>Prazo de produção?</strong><br>Média de X dias úteis.</p>
-    <p><strong>Fazem envio?</strong><br>Sim, para todo o Brasil.</p>
-    <p><strong>Formas de pagamento?</strong><br>Pix, transferência ou combinado.</p>
+<!-- ================= FAQ ================= -->
+<!-- ================= FAQ ================= -->
+<section id="faq" class="faq">
+    <div class="faq-header">
+        <h2>Dúvidas Frequentes</h2>
+        <p>Tudo o que você precisa saber antes de fechar seu pedido.</p>
+    </div>
+
+    <div class="faq-list">
+
+        <div class="faq-item" data-faq="quantidade">
+            <button class="faq-question">
+                Quantidade mínima?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Depende do modelo escolhido. Alguns permitem pedidos menores, outros exigem quantidade mínima.</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-faq="quantidade">
+            <button class="faq-question">
+                Prazo de produção?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>O prazo médio é de <strong>12 dias úteis</strong>, podendo variar conforme o modelo e volume do pedido.</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-faq="quantidade">
+            <button class="faq-question">
+                Vocês fazem envio?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Sim. Enviamos para todo o Brasil através de transportadoras confiáveis.</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-faq="quantidade">
+            <button class="faq-question">
+                Formas de pagamento?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Pix, transferência bancária ou conforme combinado durante o atendimento.</p>
+            </div>
+        </div>
+
+    </div>
 </section>
 
 <section id="sobre-nos" class="sobre-nos">
@@ -318,11 +380,25 @@
 
 
 <!-- ================= CONTATO ================= -->
+<!-- ================= CONTATO ================= -->
 <section id="contato" class="cta-final">
-    <h2>Vamos criar seus bonés?</h2>
-    <p>Fale com a gente e receba um orçamento rápido.</p>
-    <a href="/pedido" class="btn-primary">Solicitar Orçamento</a>
+    <div class="cta-content">
+        <span class="cta-badge">Atendimento rápido no WhatsApp</span>
+
+        <h2>Vamos criar seus bonés personalizados?</h2>
+        <p>Fale direto com nossa equipe e receba um orçamento rápido, sem compromisso.</p>
+
+        <button id="btn-whatsapp" class="btn-primary btn-cta">
+            Solicitar orçamento agora
+            <span class="cta-icon">→</span>
+        </button>
+
+        <small class="cta-info">
+            📦 Produção profissional • 🚚 Envio para todo o Brasil • 💬 Resposta rápida
+        </small>
+    </div>
 </section>
+
 
 <footer>
     &copy; 2026 CapStyle — Todos os direitos reservados

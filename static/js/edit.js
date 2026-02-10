@@ -3,6 +3,10 @@ const coresContainer = document.getElementById("cores-container")
 const addCorBtn = document.getElementById("add-cor")
 const produtoId = document.getElementById("produto-id").value
 
+const nomeInput = document.getElementById("nome")
+const categoriaInput = document.getElementById("categoria")
+const valorInput = document.getElementById("valor")
+
 let cores = []
 let coresRemovidas = []
 
@@ -11,11 +15,12 @@ let coresRemovidas = []
 ================================ */
 document.querySelectorAll(".cor-item").forEach(div => {
     cores.push({
-        id: div.dataset.id,
+        id: div.dataset.id || null,
         element: div,
         corInput: div.querySelector(".input-cor"),
         fileInput: div.querySelector(".input-imagem"),
-        preview: div.querySelector(".preview")
+        preview: div.querySelector(".preview"),
+        previewUrl: null
     })
 })
 
@@ -35,7 +40,7 @@ coresContainer.addEventListener("click", e => {
 })
 
 /* ===============================
-   PREVIEW IMAGEM
+   PREVIEW IMAGEM (SEM MEMORY LEAK)
 ================================ */
 coresContainer.addEventListener("change", e => {
     if (!e.target.classList.contains("input-imagem")) return
@@ -43,8 +48,18 @@ coresContainer.addEventListener("change", e => {
     const file = e.target.files[0]
     if (!file) return
 
-    const preview = e.target.closest(".cor-item").querySelector(".preview")
-    preview.src = URL.createObjectURL(file)
+    const corItem = e.target.closest(".cor-item")
+    const preview = corItem.querySelector(".preview")
+
+    // limpar preview antigo
+    if (preview.dataset.url) {
+        URL.revokeObjectURL(preview.dataset.url)
+    }
+
+    const url = URL.createObjectURL(file)
+    preview.src = url
+    preview.dataset.url = url
+    preview.style.display = "block"
 })
 
 /* ===============================
@@ -55,9 +70,9 @@ addCorBtn.addEventListener("click", () => {
     div.classList.add("cor-item")
 
     div.innerHTML = `
-        <input type="text" class="input-cor" placeholder="Nome da cor">
+        <input type="text" class="input-cor" placeholder="Nome da cor" required>
         <img class="preview" style="display:none">
-        <input type="file" class="input-imagem">
+        <input type="file" class="input-imagem" accept="image/*">
         <button type="button" class="btn-remover">Remover</button>
     `
 
@@ -68,7 +83,8 @@ addCorBtn.addEventListener("click", () => {
         element: div,
         corInput: div.querySelector(".input-cor"),
         fileInput: div.querySelector(".input-imagem"),
-        preview: div.querySelector(".preview")
+        preview: div.querySelector(".preview"),
+        previewUrl: null
     })
 })
 
@@ -78,36 +94,48 @@ addCorBtn.addEventListener("click", () => {
 form.addEventListener("submit", async e => {
     e.preventDefault()
 
-    const formData = new FormData()
+    const submitBtn = form.querySelector('button[type="submit"]')
+    submitBtn.disabled = true
+    submitBtn.textContent = "Salvando..."
 
-    formData.append("nome", document.getElementById("nome").value)
-    formData.append("categoria", document.getElementById("categoria").value)
-    formData.append("cores_removidas", JSON.stringify(coresRemovidas))
+    try {
+        const formData = new FormData()
 
-    const coresPayload = []
+        // normalizar valor (BR → padrão)
 
-    cores.forEach((c, index) => {
-        coresPayload.push({
-            id: c.id,
-            cor: c.corInput.value
+        formData.append("nome", nomeInput.value.trim())
+        formData.append("categoria", categoriaInput.value)
+        formData.append("valor", valorInput.value.trim())
+        formData.append("cores_removidas", JSON.stringify(coresRemovidas))
+
+        const coresPayload = []
+
+        cores.forEach((c, index) => {
+            coresPayload.push({
+                id: c.id,
+                cor: c.corInput.value.trim()
+            })
+
+            if (c.fileInput.files[0]) {
+                formData.append(`imagem_${index}`, c.fileInput.files[0])
+            }
         })
 
-        if (c.fileInput.files[0]) {
-            formData.append(`imagem_${index}`, c.fileInput.files[0])
-        }
-    })
+        formData.append("cores", JSON.stringify(coresPayload))
 
-    formData.append("cores", JSON.stringify(coresPayload))
+        const res = await fetch(`/admin/update/${produtoId}`, {
+            method: "POST",
+            body: formData
+        })
 
-    const res = await fetch(`/admin/update/${produtoId}`, {
-        method: "POST",
-        body: formData
-    })
+        if (!res.ok) throw new Error("Erro ao salvar")
 
-    if (res.ok) {
-        alert("Produto atualizado com sucesso!")
         window.location.href = "/admin"
-    } else {
+
+    } catch (err) {
         alert("Erro ao salvar produto")
+        console.error(err)
+        submitBtn.disabled = false
+        submitBtn.textContent = "Salvar"
     }
 })

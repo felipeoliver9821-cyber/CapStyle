@@ -173,6 +173,74 @@ document.addEventListener('click', function(e) {
     }
 });
 
+// ================= FAQ =================
+const faqItems = document.querySelectorAll('.faq-item');
+
+function closeAllFaqs() {
+    faqItems.forEach(item => {
+        item.classList.remove('active');
+        const answer = item.querySelector('.faq-answer');
+        answer.style.maxHeight = null;
+    });
+}
+
+function openFaq(item) {
+    const answer = item.querySelector('.faq-answer');
+    item.classList.add('active');
+    answer.style.maxHeight = answer.scrollHeight + "px";
+}
+
+// clique
+faqItems.forEach(item => {
+    const button = item.querySelector('.faq-question');
+
+    button.addEventListener('click', () => {
+        const isOpen = item.classList.contains('active');
+
+        closeAllFaqs();
+        if (!isOpen) openFaq(item);
+    });
+
+    // acessibilidade (teclado)
+    button.addEventListener('keydown', e => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            button.click();
+        }
+    });
+});
+
+// deep link (ex: site.com/#faq-quantidade)
+window.addEventListener('load', () => {
+    if (!location.hash.includes('faq-')) return;
+
+    const id = location.hash.replace('#faq-', '');
+    const target = document.querySelector(`.faq-item[data-faq="${id}"]`);
+
+    if (target) {
+        openFaq(target);
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
+
+
+// ================= CTA WHATSAPP =================
+const btnWhatsapp = document.getElementById('btn-whatsapp');
+
+if (btnWhatsapp) {
+    btnWhatsapp.addEventListener('click', () => {
+        const telefone = '556294536745'; // <-- TROQUE PELO SEU NÚMERO
+        const mensagem = `
+Olá! 
+Tenho interesse em fazer uma analise da nossa marca sem compromisso, e talvez começarmos a utilizar bonés personalizados!.
+
+Aguardo retorno, obrigado!
+        `.trim();
+
+        const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, '_blank');
+    });
+}
 
 
 

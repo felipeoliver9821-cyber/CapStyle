@@ -61,7 +61,8 @@ html {
     width: 100%;
 }
 
-.pedido-catalogo h1{
+.pedido-catalogo h1,
+.pedido-catalogo h2{
     display: flex;
     text-align: center;
     justify-content: center;
